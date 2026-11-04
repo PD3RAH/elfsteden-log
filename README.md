@@ -20,7 +20,11 @@ Lees de [handleiding](Handleiding-Elfsteden-log.pdf) voor uitleg.
 - Export: afdrukken/PDF met scoreberekening, Cabrillo en CSV
 - Fail-safe opslag: elke QSO direct op schijf, reservekopieën en herstelpunten
 
-## Zelf bouwen
+## Zelf bouwen (alleen voor ontwikkelaars)
+
+> Wil je het programma gewoon gebruiken? Dan heb je dit niet nodig: download het installatiebestand onder [Releases](../../releases).
+
+Voor wie het installatiebestand zelf uit de broncode wil maken (vereist [Node.js](https://nodejs.org)):
 
 ```
 npm install
