@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'Fouten of problemen'  => clean(post('fout')),
         'Volgend jaar weer'    => choice('volgendjaar', ['Ja', 'Misschien', 'Nee']),
         'Contact toegestaan'   => post('contact') === 'ja' ? 'Ja' : 'Nee',
-        'Programmaversie'      => $progVersie ?: 'onbekend',
+        'Programmaversie'      => $progVersie ? 'v' . $progVersie : 'onbekend',  // 'v' ervoor zodat Excel het niet als getal leest
     ];
     foreach (['Totaaloordeel', 'Gebruiksgemak'] as $k) if ($antw[$k] !== '') $antw[$k] .= ' van 5';
 
