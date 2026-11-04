@@ -3,7 +3,7 @@
   Enquête Elfsteden-log – © 2026 Richard Hendriksen, PD3RAH – www.pd3rah.nl
   Plaatsen op: https://www.pd3rah.nl/elfsteden-enquete.html
   Verzenden gaat via FormSubmit (formsubmit.co) naar info@pd3rah.nl.
-  Na activatie kun je hieronder bij ENDPOINT het e-mailadres vervangen door de
+  Na activatie kun je hieronder bij ACTION het e-mailadres vervangen door de
   geheime code die FormSubmit je mailt, zodat je adres niet in de pagina staat.
 -->
 <html lang="nl">
@@ -135,7 +135,7 @@ footer a{color:var(--acc)}
 (function(){
 "use strict";
 // Na activatie bij FormSubmit: vervang het e-mailadres door de geheime code uit hun mail.
-const ENDPOINT='https://formsubmit.co/ajax/info@pd3rah.nl';
+const ACTION='https://formsubmit.co/info@pd3rah.nl';
 const TO='info@pd3rah.nl';
 const f=document.getElementById('f'),btn=document.getElementById('send'),msg=document.getElementById('msg');
 const qs=new URLSearchParams(location.search);
@@ -150,30 +150,30 @@ function collect(){
   return d;
 }
 function asText(d){return Object.entries(d).map(([k,v])=>k+': '+v).join('\n');}
-f.addEventListener('submit',async e=>{
+// Na terugkomst van FormSubmit (?bedankt=1) de bedankpagina tonen
+if(qs.get('bedankt')==='1'){f.style.display='none';document.getElementById('done').style.display='block';}
+f.addEventListener('submit',e=>{
   e.preventDefault();
   if(f._honey.value)return; // spam
   const d=collect();
   const inhoud=Object.keys(d).filter(k=>!['Call','Naam','email'].includes(k));
   if(!inhoud.length){msg.className='err';msg.textContent='Vul minstens één vraag in.';return;}
   if(d.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)){msg.className='err';msg.textContent='Het e-mailadres lijkt niet te kloppen.';document.getElementById('email').focus();return;}
-  const payload=Object.assign({},d,{
-    'Programmaversie':progVersie||'onbekend',
-    _subject:'Enquête Elfsteden-log'+(d.Call?' – '+d.Call:''),
-    _template:'table',_captcha:'false'
-  });
-  if(!d.email)delete payload.email;
+  if(location.protocol==='file:'){msg.className='err';msg.innerHTML='Deze pagina werkt alleen vanaf de website. Open <a href="https://www.pd3rah.nl/elfsteden-enquete.html">www.pd3rah.nl/elfsteden-enquete.html</a>.';return;}
+  // Gewoon formulier versturen (geen script-verzoek): werkt ook met de meeste adblockers.
+  const back=location.origin+location.pathname+'?bedankt=1';
+  const fields=Object.assign({},d,{'Programmaversie':progVersie||'onbekend',
+    _subject:'Enquête Elfsteden-log'+(d.Call?' – '+d.Call:''),_template:'table',_captcha:'false',_next:back});
+  if(!d.email)delete fields.email;
+  const out=document.createElement('form');out.method='POST';out.action=ACTION;out.acceptCharset='UTF-8';out.style.display='none';
+  for(const [k,v] of Object.entries(fields)){const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v;out.appendChild(i);}
+  document.body.appendChild(out);
   btn.disabled=true;msg.className='';msg.textContent='Bezig met versturen…';
-  try{
-    const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
-    const j=await r.json().catch(()=>({}));
-    if(r.ok&&(j.success===true||j.success==='true')){f.style.display='none';document.getElementById('done').style.display='block';window.scrollTo(0,0);return;}
-    throw new Error(j.message||('HTTP '+r.status));
-  }catch(err){
-    btn.disabled=false;msg.className='err';
-    const body=encodeURIComponent('Enquête Elfsteden-log\n\n'+asText(payload).replace(/^_.*$/gm,'').trim());
-    msg.innerHTML='Versturen is niet gelukt ('+String(err.message).replace(/[<>&]/g,'')+'). Probeer het later opnieuw, of <a href="mailto:'+TO+'?subject='+encodeURIComponent('Enquête Elfsteden-log')+'&body='+body+'">verstuur je antwoorden met je eigen e-mailprogramma</a> naar '+TO+'.';
-  }
+  out.submit();
+  // Als er na 15 s nog niets gebeurd is: alternatief aanbieden
+  setTimeout(()=>{btn.disabled=false;msg.className='err';
+    const body=encodeURIComponent('Enquête Elfsteden-log\n\n'+asText(fields).replace(/^_.*$/gm,'').trim());
+    msg.innerHTML='Versturen duurt erg lang of is geblokkeerd. Zet eventueel je adblocker uit voor deze pagina en probeer opnieuw, of <a href="mailto:'+TO+'?subject='+encodeURIComponent('Enquête Elfsteden-log')+'&body='+body+'">verstuur je antwoorden met je eigen e-mailprogramma</a> naar '+TO+'.';},15000);
 });
 })();
 </script>
