@@ -1,0 +1,28 @@
+Elfsteden-log 2.3
+Logprogramma voor de 42e Friese Elfsteden Contest (2026)
+Gemaakt door Richard Hendriksen, PD3RAH - www.pd3rah.nl
+(c) 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
+
+DISCLAIMER
+
+Dit programma wordt gratis en "as is" ter beschikking gesteld, zonder enige garantie op juistheid, volledigheid of storingsvrije werking. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het gebruik van dit programma. Controleer je log en berekende score altijd zelf voordat je deze definitief instuurt. Het officiele reglement en de beslissingen van de contestorganisatie zijn te allen tijde leidend.
+
+AUTEURSRECHT
+
+(c) 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden. Het programma, de handleiding, de vormgeving en de broncode zijn auteursrechtelijk beschermd. Je mag het programma gratis gebruiken voor eigen, niet-commercieel gebruik. Je mag het ongewijzigd en kosteloos aan anderen doorgeven, op voorwaarde dat de naamsvermelding, deze disclaimer en de auteursrechtvermelding intact blijven. Het is niet toegestaan het programma of de handleiding te verkopen, aan te passen, geheel of gedeeltelijk over te nemen of onder een andere naam te verspreiden zonder voorafgaande schriftelijke toestemming van de maker.
+
+SOFTWARE VAN DERDEN
+
+Dit programma bevat open-source onderdelen, waaronder Electron en Chromium. Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten staan in de installatiemap (LICENSE.electron.txt en LICENSES.chromium.html).
+
+REGLEMENT EN NAMEN
+
+Het contestreglement, de naam van de contest en de bijbehorende gegevens zijn van de organisatie van de Friese Elfsteden Contest. Elfsteden-log is een onafhankelijk hulpmiddel en geen officiele uitgave van de contestorganisatie.
+
+JOUW GEGEVENS
+
+De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Alleen als je vrijwillig de enquete op www.pd3rah.nl invult, worden die antwoorden per e-mail (via de dienst FormSubmit) naar de maker gestuurd. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.
+
+Door op "Akkoord" te klikken ga je hiermee akkoord.
+
+Je logbestanden worden bewaard in: Documenten\Elfsteden-log

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<!--
+  Elfsteden-log 2.3 – logprogramma voor de 42e Friese Elfsteden Contest
+  Gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl
+  © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
+  Disclaimer: dit programma wordt gratis en "as is" ter beschikking gesteld, zonder
+  enige garantie. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker
+  aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in
+  logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het
+  gebruik van dit programma.
+-->
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>42e Friese Elfsteden Contest – Log</title>
+<style>
+:root{--bg:#f4f6f8;--card:#fff;--ink:#1c2430;--mut:#6b7684;--line:#d9dee4;--acc:#1d5fa8;--ok:#1f7a3d;--warn:#b3261e;--dupe:#fde7e5;--hit:#e3f1e7}
+*{box-sizing:border-box}
+body{margin:0;font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--acc);color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+header h1{font-size:17px;margin:0}
+#clock{font-variant-numeric:tabular-nums;font-weight:600}
+main{max-width:1250px;margin:0 auto;padding:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.card h2{font-size:14px;margin:0 0 8px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+label{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+input,select{font:inherit;padding:6px 8px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--ink)}
+input:focus,select:focus{outline:2px solid var(--acc);outline-offset:-1px}
+input.call{text-transform:uppercase;font-weight:700;font-size:16px;width:140px}
+input.sm{width:70px}input.md{width:100px}input.lg{width:180px}input.xl{width:300px}
+button{font:inherit;padding:7px 12px;border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:5px;cursor:pointer}
+button.sec{background:#fff;color:var(--acc)}
+button.del{background:#fff;color:var(--warn);border-color:var(--warn);padding:2px 8px}
+button.edit{background:#fff;color:var(--acc);padding:2px 8px}
+.tabs{display:flex;gap:4px;margin-bottom:-1px}
+.tab{padding:8px 16px;border:1px solid var(--line);border-bottom:none;border-radius:8px 8px 0 0;background:#e8ecf0;cursor:pointer;font-weight:600}
+.tab.on{background:var(--card);color:var(--acc)}
+.tabbody{border-top-left-radius:0}
+#status{min-height:20px;font-weight:600;margin-top:6px}
+#status.dupe{color:var(--warn)}#status.ok{color:var(--ok)}
+.score{display:flex;gap:18px;flex-wrap:wrap}
+.score div{min-width:100px}.score b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.mults{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.mults span{padding:3px 9px;border:1px solid var(--line);border-radius:12px;font-size:12px;color:var(--mut)}
+.mults span.hit{background:var(--hit);border-color:var(--ok);color:var(--ok);font-weight:600}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:12px;color:var(--mut);position:sticky;top:0;background:var(--card)}
+tr.isdupe td{background:var(--dupe);text-decoration:line-through}
+td.newmult{color:var(--ok);font-weight:700}
+.tblwrap{max-height:55vh;overflow:auto}
+.muted{color:var(--mut);font-size:12px}
+.chk{flex-direction:row;align-items:center;gap:6px;color:var(--ink);font-size:13px}
+dialog{border:1px solid var(--line);border-radius:8px;padding:16px;max-width:520px}
+#printarea{display:none}
+#health{font-size:12px;opacity:.95}
+.helpbtn{color:#fff;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,.65);border-radius:5px;padding:5px 14px;letter-spacing:.02em;transition:background .15s}
+.helpbtn:hover,.helpbtn:focus-visible{background:rgba(255,255,255,.16);outline:none}
+footer details{margin-top:8px}footer summary{cursor:pointer;color:var(--acc);font-weight:600}
+footer h3{font-size:13px;margin:10px 0 2px;color:var(--ink)}footer p{margin:0 0 4px}
+#health .bad{color:#ffd2cc;font-weight:700}
+.banner{background:#fff4e5;border:2px solid #e08a00;color:#6b3d00;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-weight:600}
+.banner.red{background:#fde7e5;border-color:var(--warn);color:var(--warn)}
+.banner button{margin-left:8px}
+body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:none;opacity:.4}
+#snapSel{width:100%;margin:8px 0}
+@media print{
+  @page{size:A4 landscape;margin:12mm}
+  header,.noprint,.tabs{display:none!important}
+  body{background:#fff;font-size:11px}
+  main{padding:0;max-width:none}
+  #printarea{display:block!important}
+  #printarea table{font-size:10px}
+  #printarea th{position:static}
+  .pb{page-break-before:always}
+  .sig{margin-top:24px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>42e Friese Elfsteden Contest · 2026</h1>
+  <div id="health">Opslag: laden…</div>
+  <div class="noprint" style="display:flex;gap:8px">
+    <a class="helpbtn" href="handleiding.html" target="_blank" title="Handleiding openen">Handleiding</a>
+    <a class="helpbtn" id="surveyLink" href="https://www.pd3rah.nl/elfsteden-enquete.html" target="_blank" title="Geef je mening over Elfsteden-log (opent www.pd3rah.nl)">Enquête</a>
+  </div>
+  <div id="clock">--:--:--</div>
+</header>
+<main>
+<div id="banner" class="banner noprint" hidden></div>
+
+<section class="card noprint">
+  <h2>Station &amp; deelnemer</h2>
+  <div class="row">
+    <label>Eigen call<input id="myCall" class="call" autocomplete="off"></label>
+    <label>Eigen regio<input id="myReg" class="sm" inputmode="numeric" placeholder="14"></label>
+    <label>Eigen QTH<input id="myQth" class="lg" placeholder="bijv. Hoorn"></label>
+    <label>Categorie<select id="myOpCat"><option value="SINGLE-OP">Single operator</option><option value="MULTI-OP">Multi-operator</option></select></label>
+    <label>Operator(s)<input id="myOps" class="lg" placeholder="calls, gescheiden door spatie"></label>
+    <label>Tijdweergave<select id="tz"><option value="local">Lokale tijd</option><option value="utc">UTC</option></select></label>
+  </div>
+  <div class="row" style="margin-top:8px">
+    <label>Naam<input id="myName" class="lg"></label>
+    <label>Adres<input id="myAddr" class="xl" placeholder="straat + huisnummer"></label>
+    <label>Postcode + plaats<input id="myCity" class="lg"></label>
+    <label>E-mail<input id="myMail" class="lg"></label>
+  </div>
+  <p class="muted" id="sectInfo"></p>
+</section>
+
+<div class="tabs noprint">
+  <div class="tab on" data-band="80m">80 m</div>
+  <div class="tab" data-band="2m">2 m</div>
+</div>
+
+<section class="card tabbody noprint">
+  <h2 id="entryTitle">Nieuwe verbinding</h2>
+  <form id="qsoForm" class="row" autocomplete="off">
+    <label>Tijd<input id="fTime" class="sm" placeholder="auto"></label>
+    <label>Freq (MHz)<input id="fFreq" class="md" inputmode="decimal"></label>
+    <label>Mode<select id="fMode"><option>SSB</option><option>FM</option></select></label>
+    <label>Call<input id="fCall" class="call" required></label>
+    <label>RST gegeven<input id="fRstS" class="sm"></label>
+    <label>Regio gegeven<input id="fRegS" class="sm" readonly tabindex="-1"></label>
+    <label>RST ontvangen<input id="fRstR" class="sm"></label>
+    <label>Regio ontvangen<input id="fRegR" class="sm" inputmode="numeric"></label>
+    <label>QTH ontvangen<input id="fQth" class="lg" list="cityList"></label>
+    <label class="chk"><input type="checkbox" id="fDx"> Buitenland</label>
+    <label>Ptn<input id="fPts" class="sm" readonly tabindex="-1"></label>
+    <button type="submit">Loggen (Enter)</button>
+    <button type="button" class="sec" id="btnClear">Wissen (Esc)</button>
+  </form>
+  <datalist id="cityList"></datalist>
+  <div id="status"></div>
+  <p class="muted">Tijd leeg = nu. Frequentie blijft staan tot je hem wijzigt. Buitenland wordt herkend aan de prefix (alles buiten PA–PI), handmatig aan te passen. Elfstedensteden en Bartlehiem worden in de QTH herkend (ook Friese namen zoals Ljouwert, Snits, Harns). Verbindingen via repeaters/omzetters zijn niet geldig – niet loggen.</p>
+</section>
+
+<section class="card noprint">
+  <h2 id="scoreTitle">Score</h2>
+  <div class="score" id="score"></div>
+  <div class="mults" id="mults"></div>
+</section>
+
+<section class="card noprint">
+  <h2 id="logTitle">Log</h2>
+  <div class="tblwrap">
+    <table>
+      <thead><tr><th>#</th><th>Tijd</th><th>Freq</th><th>Mode</th><th>Call</th><th>RST gev.</th><th>Regio gev.</th><th>RST ontv.</th><th>Regio ontv.</th><th>QTH</th><th>Ptn</th><th>Mult</th><th></th></tr></thead>
+      <tbody id="logBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card noprint">
+  <h2>Export &amp; back-up</h2>
+  <div class="row" id="exportRow" style="margin-bottom:10px">
+    <button type="button" id="btnAuto">Automatische back-up naar bestand…</button>
+    <button type="button" class="sec" id="btnResume" hidden>Automatische back-up hervatten</button>
+    <button type="button" class="sec" id="btnSnaps">Herstelpunten…</button>
+    <button type="button" class="sec" id="btnFolder" hidden>Map met logbestanden openen</button>
+  </div>
+  <div class="row">
+    <button type="button" id="btnCab">Cabrillo deze band</button>
+    <button type="button" id="btnCsv">CSV deze band</button>
+    <button type="button" id="btnPrint">Afdrukken / PDF (beide banden)</button>
+    <button type="button" class="sec" id="btnBackup">Back-up opslaan</button>
+    <button type="button" class="sec" id="btnRestore">Back-up terugzetten</button>
+    <input type="file" id="restoreFile" accept=".json" hidden>
+    <button type="button" class="del" id="btnReset" style="padding:7px 12px">Band leegmaken</button>
+  </div>
+  <p class="muted">Logs vóór 6 december 2026 mailen naar pa2ip at veron.nl of per post naar Friese Elfsteden Contest, Buorren 91, 9081 AP Lekkum. Per band een apart log met eigen scoreberekening, naam en adres. Het log wordt automatisch in deze browser bewaard; maak toch regelmatig een back-up.</p>
+</section>
+
+<section id="printarea"></section>
+
+<footer class="card noprint muted" style="line-height:1.5">
+  <b style="color:var(--ink)">Elfsteden-log 2.3 – gemaakt door Richard Hendriksen, PD3RAH</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.html" target="_blank" class="surveyLink2">Enquête invullen</a><br>
+  <b>Disclaimer:</b> Dit programma wordt gratis en "as is" ter beschikking gesteld, zonder enige garantie op juistheid, volledigheid of storingsvrije werking. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het gebruik van dit programma. Controleer je log en berekende score altijd zelf voordat je deze definitief instuurt. Het officiële reglement en de beslissingen van de contestorganisatie zijn te allen tijde leidend.<br>
+  © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
+  <details><summary>Auteursrecht en gebruiksvoorwaarden</summary>
+<h3>Auteursrecht</h3>
+<p>© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden. Het programma, de handleiding, de vormgeving en de broncode zijn auteursrechtelijk beschermd. Je mag het programma gratis gebruiken voor eigen, niet-commercieel gebruik. Je mag het ongewijzigd en kosteloos aan anderen doorgeven, op voorwaarde dat de naamsvermelding, deze disclaimer en de auteursrechtvermelding intact blijven. Het is niet toegestaan het programma of de handleiding te verkopen, aan te passen, geheel of gedeeltelijk over te nemen of onder een andere naam te verspreiden zonder voorafgaande schriftelijke toestemming van de maker.</p>
+<h3>Software van derden</h3>
+<p>De Windows-versie bevat open-source onderdelen, waaronder Electron en Chromium. Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten worden met het programma meegeleverd (LICENSE.electron.txt en LICENSES.chromium.html in de installatiemap).</p>
+<h3>Reglement en namen</h3>
+<p>Het contestreglement, de naam van de contest en de bijbehorende gegevens zijn van de organisatie van de Friese Elfsteden Contest. Elfsteden-log is een onafhankelijk hulpmiddel en geen officiële uitgave van de contestorganisatie.</p>
+<h3>Jouw gegevens</h3>
+<p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden per e-mail (via de dienst FormSubmit) naar de maker gestuurd. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
+  </details>
+</footer>
+</main>
+
+<dialog id="snapDlg">
+  <b>Herstelpunten</b>
+  <p class="muted">Na elke wijziging wordt automatisch een herstelpunt gemaakt (de laatste 100). Kies een moment om het log terug te zetten naar die toestand. De huidige toestand wordt eerst zelf als herstelpunt bewaard.</p>
+  <select id="snapSel" size="10"></select>
+  <div class="row"><button id="snapYes">Terugzetten</button><button class="sec" id="snapNo">Sluiten</button></div>
+</dialog>
+
+<dialog id="dlg">
+  <p id="dlgMsg"></p>
+  <div class="row"><button id="dlgYes">Ja</button><button class="sec" id="dlgNo">Annuleren</button></div>
+</dialog>
+
+<script>
+(function(){
+"use strict";
+const KEY='elfsteden-log-v2';
+const BANDS=['80m','2m'];
+const BANDCFG={'80m':{lo:3.5,hi:3.8,def:'3.650',cab:'80M'},'2m':{lo:144,hi:146,def:'145.400',cab:'2M'}};
+const DUTCH=/^P[A-I]/;
+// Contestperiode: 22-11-2026 11:00–14:00 lokale tijd (CET = UTC+1) => 10:00–13:00 UTC
+const T0=Date.UTC(2026,10,22,10,0), T1=Date.UTC(2026,10,22,13,0);
+// Multipliers + aliassen (Nederlands/Fries)
+const MULTS=[
+  ['Leeuwarden',['leeuwarden','ljouwert']],
+  ['Sneek',['sneek','snits']],
+  ['IJlst',['ijlst','ylst','drylts']],
+  ['Sloten',['sloten','sleat']],
+  ['Staveren',['staveren','stavoren','starum']],
+  ['Hindelopen',['hindelopen','hylpen']],
+  ['Workum',['workum','warkum']],
+  ['Bolsward',['bolsward','boalsert']],
+  ['Harlingen',['harlingen','harns']],
+  ['Franeker',['franeker','frjentsjer']],
+  ['Dokkum',['dokkum']],
+  ['Bartlehiem',['bartlehiem']]
+];
+
+let state={station:{call:'',reg:'',qth:'',opcat:'SINGLE-OP',ops:'',name:'',addr:'',city:'',mail:'',tz:'local'},
+  logs:{'80m':[],'2m':[]},freq:{'80m':BANDCFG['80m'].def,'2m':BANDCFG['2m'].def},band:'80m'};
+let editId=null;
+const $=id=>document.getElementById(id);
+
+function merge(s){state.station=Object.assign(state.station,s.station||{});state.freq=Object.assign(state.freq,s.freq||{});state.band=s.band||'80m';state.savedAt=s.savedAt||0;BANDS.forEach(b=>state.logs[b]=(s.logs&&s.logs[b])||[]);}
+
+/* ---------- FAIL-SAFE OPSLAG ----------
+   1. localStorage (direct, synchroon)
+   2. IndexedDB (tweede, onafhankelijke kopie) + herstelpunten (laatste 100)
+   3. optioneel: automatisch wegschrijven naar een back-upbestand op schijf (Chrome/Edge)
+   4. vergrendeling als het log in een tweede tabblad wordt geopend
+   5. waarschuwing bij sluiten zonder recente back-up                       */
+const SNAPMAX=100;
+let db=null,fileHandle=null,locked=false,qsoSinceBackup=0,lastBackup=0;
+const health={ls:null,idb:null,file:null,disk:null};
+const APP=window.elfApi||null; // aanwezig in de geïnstalleerde versie
+let diskPath='';
+function openDb(){return new Promise(res=>{try{const r=indexedDB.open('elfsteden-log',1);
+  r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('kv');d.createObjectStore('snaps',{autoIncrement:true});};
+  r.onsuccess=()=>res(r.result);r.onerror=()=>res(null);r.onblocked=()=>res(null);}catch(e){res(null);}});}
+function tx(store,mode,fn){return new Promise(res=>{if(!db)return res(null);try{const t=mode==='readwrite'?db.transaction(store,mode,{durability:'strict'}):db.transaction(store,mode);const req=fn(t.objectStore(store));
+  t.oncomplete=()=>res(req&&'result'in req?(req.result===undefined?true:req.result):true);t.onerror=t.onabort=()=>res(null);}catch(e){res(null);}});}
+async function load(){
+  let a=null,b=null;
+  try{a=JSON.parse(localStorage.getItem(KEY));health.ls=true;}catch(e){health.ls=false;}
+  db=await openDb();health.idb=!!db;
+  try{const j=await tx('kv','readonly',s=>s.get('state'));b=typeof j==='string'?JSON.parse(j):null;}catch(e){}
+  // neem de nieuwste van de twee kopieën
+  let c=null;if(APP){try{const r=APP.load();if(r&&r.json)c=JSON.parse(r.json);diskPath=r.path||'';health.disk=true;}catch(e){health.disk=false;}}
+  const best=[a,b,c].filter(x=>x&&x.logs).sort((x,y)=>(y.savedAt||0)-(x.savedAt||0))[0];
+  if(best)merge(best);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+  // eerder gekozen back-upbestand terugzoeken
+  try{const fh=await tx('kv','readonly',s=>s.get('fh'));
+    if(fh&&fh.queryPermission){fileHandle=fh;const p=await fh.queryPermission({mode:'readwrite'});
+      if(p==='granted')health.file=true;else{health.file=false;$('btnResume').hidden=false;}}}catch(e){fileHandle=null;}
+}
+function save(reason){
+  if(locked)return;
+  state.savedAt=Date.now();
+  const json=JSON.stringify(state);
+  try{localStorage.setItem(KEY,json);health.ls=true;}catch(e){health.ls=false;}
+  tx('kv','readwrite',s=>s.put(json,'state')).then(r=>{health.idb=!!r;renderHealth();});
+  if(APP){try{const r=APP.save(json);health.disk=!!(r&&r.ok);if(r&&r.path)diskPath=r.path;if(health.disk){lastBackup=Date.now();qsoSinceBackup=0;}}catch(e){health.disk=false;}}
+  if(reason)snapshot(reason,json);
+  writeFile(json);
+  renderHealth();
+}
+async function snapshot(reason,json){
+  await tx('snaps','readwrite',s=>s.add({t:Date.now(),reason,json}));
+  const keys=await tx('snaps','readonly',s=>s.getAllKeys());
+  if(Array.isArray(keys)&&keys.length>SNAPMAX)await tx('snaps','readwrite',s=>s.delete(IDBKeyRange.upperBound(keys[keys.length-SNAPMAX-1])));
+}
+let writing=Promise.resolve();
+function writeFile(json){
+  if(!fileHandle||health.file===false)return;
+  writing=writing.then(async()=>{try{const w=await fileHandle.createWritable();await w.write(json);await w.close();
+    health.file=true;lastBackup=Date.now();qsoSinceBackup=0;}catch(e){health.file=false;}renderHealth();});
+}
+function renderHealth(){
+  const ok=v=>v?'✔':'<span class="bad">✖</span>';
+  $('health').innerHTML='Opslag: '+(APP?'harde schijf '+ok(health.disk)+' · ':'')+'browser '+ok(health.ls)+' · database '+ok(health.idb)+(APP?'':' · back-upbestand '+
+    (fileHandle?(health.file?'✔ '+esc(fileHandle.name):'<span class="bad">gepauzeerd</span>'):'–'))+
+    (lastBackup?' · laatste back-up '+new Date(lastBackup).toLocaleTimeString('nl-NL',{hour:'2-digit',minute:'2-digit'}):'');
+  if(locked)return;
+  const msgs=[];
+  if(APP&&health.disk===false)msgs.push(['red','Opslaan op de harde schijf is mislukt! Controleer of de map Documenten\\Elfsteden-log bereikbaar is en maak een back-up.']);
+  if(health.ls===false&&health.idb===false)msgs.push(['red','Opslaan in de browser werkt niet! Gegevens gaan verloren bij sluiten. Stel direct een automatische back-up in of maak handmatig back-ups.']);
+  else if(health.ls===false||health.idb===false)msgs.push(['','Eén van de twee opslagkopieën werkt niet; de andere wel. Maak voor de zekerheid een back-up.']);
+  if(fileHandle&&health.file===false)msgs.push(['','Automatische back-up naar bestand is gepauzeerd. Klik op "Automatische back-up hervatten".']);
+  if(!APP&&!health.file&&qsoSinceBackup>=20)msgs.push(['','Al '+qsoSinceBackup+' QSO’s sinds de laatste back-up. <button type="button" onclick="document.getElementById(\'btnBackup\').click()">Nu back-up maken</button>']);
+  const b=$('banner');b.hidden=!msgs.length;b.className='banner noprint '+(msgs.some(m=>m[0]==='red')?'red':'');b.innerHTML=msgs.map(m=>m[1]).join('<br>');
+}
+// tweede tabblad detecteren
+let bc=null;
+try{bc=new BroadcastChannel('elfsteden-log');bc.onmessage=e=>{
+  if(e.data==='hello'&&!locked)bc.postMessage('busy');
+  if(e.data==='busy'||e.data==='takeover')lockTab();
+};}catch(e){}
+window.addEventListener('storage',e=>{if(e.key===KEY&&!locked)lockTab();});
+function lockTab(){
+  locked=true;document.body.classList.add('locked');
+  const b=$('banner');b.hidden=false;b.className='banner red noprint';
+  b.innerHTML='Dit log is ook in een ander tabblad of venster geopend. Om te voorkomen dat de twee elkaar overschrijven is dit tabblad vergrendeld. Sluit dit tabblad, of <button type="button" id="btnTake">hier verder werken</button> (laadt de nieuwste gegevens en vergrendelt het andere tabblad).';
+  $('btnTake').onclick=()=>{try{bc&&bc.postMessage('takeover');}catch(e){}location.reload();};
+}
+window.addEventListener('beforeunload',e=>{if(!APP&&!locked&&!health.file&&qsoSinceBackup>0){e.preventDefault();e.returnValue='';}});
+
+/* ---------- tijd ---------- */
+const P2=n=>String(n).padStart(2,'0');
+function hhmm(ts,utc){const d=new Date(ts);return utc?P2(d.getUTCHours())+P2(d.getUTCMinutes()):P2(d.getHours())+P2(d.getMinutes());}
+function ymd(ts,utc){const d=new Date(ts);return utc?d.getUTCFullYear()+'-'+P2(d.getUTCMonth()+1)+'-'+P2(d.getUTCDate()):d.getFullYear()+'-'+P2(d.getMonth()+1)+'-'+P2(d.getDate());}
+const isUtc=()=>state.station.tz==='utc';
+// handmatige tijd HHMM omzetten naar timestamp op de datum van refTs (in gekozen tijdzone)
+function tsFromHHMM(t,refTs){
+  t=t.replace(/\D/g,'').padStart(4,'0').slice(-4);const h=+t.slice(0,2),m=+t.slice(2);
+  if(h>23||m>59)return null;
+  const d=new Date(refTs);
+  if(isUtc()){d.setUTCHours(h,m,0,0);}else{d.setHours(h,m,0,0);}
+  return d.getTime();
+}
+setInterval(()=>{const n=Date.now();$('clock').textContent=new Date(n).toLocaleTimeString('nl-NL')+' lokaal · '+new Date(n).toISOString().substr(11,8)+' UTC';},500);
+
+/* ---------- punten & multipliers ---------- */
+function normReg(r){r=String(r||'').toUpperCase().replace(/^R-?/,'').trim();return r===''?'':String(parseInt(r,10)||r);}
+function foreignByCall(call){
+  call=call.toUpperCase().trim();if(!call)return false;
+  const parts=call.split('/').filter(Boolean);
+  const skip=['P','M','MM','AM','QRP','A'];
+  const pre=parts.length>1?parts.find(p=>p.length<=3&&!skip.includes(p)&&/^[A-Z0-9]+$/.test(p)):null;
+  const base=parts.reduce((a,b)=>b.length>a.length?b:a,'');
+  return !DUTCH.test(pre||base);
+}
+function fold(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z]/g,' ');}
+function multOf(qth){const w=' '+fold(qth)+' ';for(const [name,al] of MULTS){if(al.some(a=>w.includes(' '+a+' ')))return name;}return '';}
+function points(q){
+  if(q.dupe)return 0;
+  if(q.dx)return 2;
+  const mine=normReg(state.station.reg),his=normReg(q.regR);
+  if(!his||!mine)return 0;
+  return his===mine?1:5;
+}
+function recompute(band){
+  const seen=new Set(),mseen=new Set();
+  state.logs[band].sort((a,b)=>a.ts-b.ts).forEach(q=>{
+    q.dupe=seen.has(q.call);seen.add(q.call);
+    q.pts=points(q);
+    q.mult=q.dupe?'':multOf(q.qth);
+    q.newMult=!!q.mult&&!mseen.has(q.mult);if(q.mult)mseen.add(q.mult);
+  });
+}
+function stats(band){
+  recompute(band);
+  const L=state.logs[band];const o={qso:L.length,dupe:0,eigen:0,buiten:0,dx:0,onbekend:0,pts:0,mults:new Set()};
+  L.forEach(q=>{if(q.dupe){o.dupe++;return;}o.pts+=q.pts;if(q.mult)o.mults.add(q.mult);
+    if(q.dx)o.dx++;else if(q.pts===1)o.eigen++;else if(q.pts===5)o.buiten++;else o.onbekend++;});
+  o.nm=o.mults.size;o.score=o.pts*o.nm;return o;
+}
+function sectionName(band){const r=normReg(state.station.reg);return r?(band.replace('m',' m')+' stations '+(r==='14'?'in':'buiten')+' R-14'):'(regio onbekend)';}
+
+/* ---------- UI ---------- */
+const defRst=()=>'59';
+function clearForm(){
+  editId=null;
+  ['fTime','fCall','fRegR','fQth'].forEach(i=>$(i).value='');
+  $('fRstS').value=defRst();$('fRstR').value=defRst();
+  $('fRegS').value=normReg(state.station.reg);
+  $('fFreq').value=state.freq[state.band];
+  $('fMode').value=state.band==='2m'?($('fMode').dataset['last2m']||'SSB'):'SSB';
+  $('fDx').checked=false;$('fDx').dataset.manual='';
+  $('fPts').value='';$('status').textContent='';$('status').className='';
+  document.querySelector('#qsoForm button[type=submit]').textContent='Loggen (Enter)';
+  $('fCall').focus();
+}
+function setStatus(t,cls){$('status').textContent=t;$('status').className=cls||'';}
+function liveCheck(){
+  const c=$('fCall').value.toUpperCase().trim();
+  if(!$('fDx').dataset.manual)$('fDx').checked=c?foreignByCall(c):false;
+  const dup=c&&state.logs[state.band].some(q=>q.call===c&&q.id!==editId);
+  $('fPts').value=c?points({call:c,regR:$('fRegR').value,dx:$('fDx').checked,dupe:dup}):'';
+  if(!c){setStatus('');return;}
+  if(dup){setStatus('⚠ DUBBEL: '+c+' is al gewerkt op '+state.band+' (0 punten)','dupe');return;}
+  const msg=[];
+  const other=BANDS.filter(b=>b!==state.band&&state.logs[b].some(q=>q.call===c));
+  msg.push(other.length?'Nieuw op '+state.band+' (al gewerkt op '+other.join(', ')+')':'Nieuw station');
+  const m=multOf($('fQth').value);
+  if(m){const have=state.logs[state.band].some(q=>q.mult===m&&q.id!==editId&&!q.dupe);msg.push(have?m+' (al gewerkt)':'★ NIEUWE MULTIPLIER: '+m);}
+  setStatus(msg.join(' · '),'ok');
+}
+function renderStation(){
+  const s=state.station;
+  $('myCall').value=s.call;$('myReg').value=s.reg;$('myQth').value=s.qth;$('myOpCat').value=s.opcat;$('myOps').value=s.ops;
+  $('myName').value=s.name;$('myAddr').value=s.addr;$('myCity').value=s.city;$('myMail').value=s.mail;$('tz').value=s.tz;
+  const r=normReg(s.reg);
+  $('sectInfo').textContent=r?('Sectie: '+sectionName(state.band)+' – single band, single transmitter. Contest: zondag 22 november 2026, 11.00–14.00 uur lokale tijd. Score = punten × multipliers (max. 12).'):'Vul je eigen regionummer in om de sectie en punten te bepalen.';
+  $('fRegS').value=r;
+}
+function renderTabs(){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.band===state.band));
+  const B=state.band.replace('m',' m');
+  $('entryTitle').textContent='Nieuwe verbinding – '+B;
+  $('logTitle').textContent='Log '+B+' ('+state.logs[state.band].length+' QSO’s)';
+  $('scoreTitle').textContent='Score '+B;
+}
+function renderScore(){
+  const s=stats(state.band);
+  $('score').innerHTML='<div>QSO’s<b>'+s.qso+'</b></div><div>Eigen regio (1)<b>'+s.eigen+'</b></div><div>Buiten regio (5)<b>'+s.buiten+'</b></div><div>Buitenland (2)<b>'+s.dx+'</b></div><div>Dubbel<b>'+s.dupe+'</b></div>'+
+   (s.onbekend?'<div style="color:var(--warn)">Regio ontbreekt<b>'+s.onbekend+'</b></div>':'')+
+   '<div>Punten<b>'+s.pts+'</b></div><div>Multipliers<b>'+s.nm+' / 12</b></div><div style="color:var(--acc)">Score<b>'+s.pts+' × '+s.nm+' = '+s.score+'</b></div>';
+  $('mults').innerHTML=MULTS.map(([n])=>'<span class="'+(s.mults.has(n)?'hit':'')+'">'+n+'</span>').join('');
+}
+function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function rowsHtml(band,btns){
+  const u=isUtc();
+  return state.logs[band].map((q,i)=>'<tr class="'+(q.dupe?'isdupe':'')+'"><td>'+(i+1)+'</td><td>'+hhmm(q.ts,u)+'</td><td>'+esc(q.freq)+'</td><td>'+esc(q.mode)+'</td><td><b>'+esc(q.call)+'</b></td><td>'+esc(q.rstS)+'</td><td>'+esc(q.regS)+'</td><td>'+esc(q.rstR)+'</td><td>'+esc(q.dx?(q.regR||'DX'):q.regR)+'</td><td>'+esc(q.qth)+'</td><td>'+q.pts+'</td><td class="'+(q.newMult?'newmult':'')+'">'+esc(q.mult)+'</td>'+
+   (btns?'<td><button class="edit" data-e="'+q.id+'">wijzig</button> <button class="del" data-d="'+q.id+'">×</button></td>':'')+'</tr>').join('');
+}
+function renderLog(){const tb=$('logBody');tb.innerHTML=rowsHtml(state.band,true);const w=tb.closest('.tblwrap');w.scrollTop=w.scrollHeight;}
+function renderAll(){renderStation();renderTabs();renderScore();renderLog();}
+
+function ask(msg){return new Promise(res=>{const d=$('dlg');$('dlgMsg').textContent=msg;d.showModal();$('dlgYes').onclick=()=>{d.close();res(true)};$('dlgNo').onclick=()=>{d.close();res(false)};});}
+
+/* ---------- events ---------- */
+const stMap={myCall:'call',myReg:'reg',myQth:'qth',myOpCat:'opcat',myOps:'ops',myName:'name',myAddr:'addr',myCity:'city',myMail:'mail',tz:'tz'};
+Object.keys(stMap).forEach(id=>$(id).addEventListener(id==='tz'||id==='myOpCat'?'change':'input',()=>{
+  let v=$(id).value;if(id==='myCall'||id==='myOps'){v=v.toUpperCase();$(id).value=v;}
+  state.station[stMap[id]]=id==='myCall'?v.trim():v;
+  save();renderStation();renderScore();renderLog();
+}));
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{state.band=t.dataset.band;save();clearForm();renderAll();}));
+$('fCall').addEventListener('input',()=>{const p=$('fCall').selectionStart;$('fCall').value=$('fCall').value.toUpperCase().replace(/\s/g,'');$('fCall').setSelectionRange(p,p);liveCheck();});
+['fRegR','fQth'].forEach(i=>$(i).addEventListener('input',liveCheck));
+$('fDx').addEventListener('change',()=>{$('fDx').dataset.manual='1';liveCheck();});
+$('fMode').addEventListener('change',()=>{if(state.band==='2m')$('fMode').dataset['last2m']=$('fMode').value;});
+$('btnClear').addEventListener('click',clearForm);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('dlg').open){e.preventDefault();clearForm();}});
+$('cityList').innerHTML=MULTS.map(([n])=>'<option value="'+n+'">').join('');
+
+function parseFreq(v){v=String(v).replace(',','.').trim();let f=parseFloat(v);if(isNaN(f))return null;if(f>1000)f=f/1000;return f;} // kHz ook toegestaan
+$('qsoForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const call=$('fCall').value.toUpperCase().trim();
+  if(!call){$('fCall').focus();return;}
+  if(!normReg(state.station.reg)){setStatus('Vul eerst je eigen regionummer in.','dupe');$('myReg').focus();return;}
+  const f=parseFreq($('fFreq').value),cfg=BANDCFG[state.band];
+  if(f===null||f<cfg.lo||f>cfg.hi){setStatus('Frequentie '+($('fFreq').value||'(leeg)')+' ligt niet in de '+state.band+'-band ('+cfg.lo+'–'+cfg.hi+' MHz).','dupe');$('fFreq').focus();return;}
+  const dx=$('fDx').checked;
+  if(!dx&&!$('fRegR').value.trim()){setStatus('Regionummer ontvangen ontbreekt.','dupe');$('fRegR').focus();return;}
+  if(!$('fQth').value.trim()){setStatus('QTH ontvangen ontbreekt.','dupe');$('fQth').focus();return;}
+  const L=state.logs[state.band];const old=editId?L.find(x=>x.id===editId):null;
+  let ts=old?old.ts:Date.now();
+  if($('fTime').value.trim()){const t=tsFromHHMM($('fTime').value,ts);if(t===null){setStatus('Ongeldige tijd (gebruik UUMM).','dupe');$('fTime').focus();return;}ts=t;}
+  const freq=f.toFixed(3);state.freq[state.band]=freq;
+  const q={id:old?old.id:String(Date.now())+Math.random().toString(36).slice(2,6),ts,freq,mode:$('fMode').value,call,
+    rstS:$('fRstS').value.trim(),regS:normReg(state.station.reg),rstR:$('fRstR').value.trim(),regR:normReg($('fRegR').value),qth:$('fQth').value.trim(),dx};
+  if(old)L[L.indexOf(old)]=q;else L.push(q);
+  if(!old)qsoSinceBackup++;
+  save((old?'Wijziging ':'QSO ')+call+' ('+state.band+')');renderAll();clearForm();
+  if(ts<T0||ts>=T1)setStatus('Let op: '+call+' gelogd buiten de contestperiode (22-11-2026 11.00–14.00 lokaal).','dupe');
+});
+$('logBody').addEventListener('click',async e=>{
+  const L=state.logs[state.band];
+  if(e.target.dataset.d){const q=L.find(x=>x.id===e.target.dataset.d);if(await ask('QSO met '+q.call+' verwijderen?')){L.splice(L.indexOf(q),1);save('Verwijderd '+q.call+' ('+state.band+')');renderAll();}}
+  if(e.target.dataset.e){const q=L.find(x=>x.id===e.target.dataset.e);editId=q.id;
+    $('fTime').value=hhmm(q.ts,isUtc());$('fFreq').value=q.freq;$('fMode').value=q.mode;$('fCall').value=q.call;$('fRstS').value=q.rstS;$('fRstR').value=q.rstR;$('fRegR').value=q.regR;$('fQth').value=q.qth;$('fDx').checked=q.dx;$('fDx').dataset.manual='1';
+    document.querySelector('#qsoForm button[type=submit]').textContent='Opslaan wijziging';liveCheck();$('fCall').focus();}
+});
+
+/* ---------- export ---------- */
+function download(name,text,type,bom){
+  const b=new Blob([(bom?'﻿':'')+text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
+}
+function fname(ext,band){return 'elfsteden2026_'+(state.station.call||'log').replace(/\//g,'-')+(band?'_'+band:'')+'.'+ext;}
+function cabTok(s){return String(s||'').toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^A-Z0-9\-\/]+/g,'-').replace(/^-+|-+$/g,'')||'-';}
+function cabrillo(band){
+  const s=state.station,st=stats(band),L=state.logs[band];
+  const modes=[...new Set(L.map(q=>q.mode))];
+  const catMode=modes.length===1?modes[0]:'MIXED';
+  const h=['START-OF-LOG: 3.0','CONTEST: FRIESE-ELFSTEDEN-CONTEST','CALLSIGN: '+s.call,
+    'CATEGORY-OPERATOR: '+s.opcat,'CATEGORY-BAND: '+BANDCFG[band].cab,'CATEGORY-MODE: '+(catMode||'SSB'),'CATEGORY-TRANSMITTER: ONE',
+    'CLAIMED-SCORE: '+st.score,
+    'LOCATION: R-'+normReg(s.reg)+' '+cabTok(s.qth)];
+  if(s.ops.trim())h.push('OPERATORS: '+s.ops.trim());
+  if(s.name)h.push('NAME: '+s.name);
+  if(s.addr)h.push('ADDRESS: '+s.addr);
+  if(s.city)h.push('ADDRESS: '+s.city);
+  if(s.mail)h.push('EMAIL: '+s.mail);
+  h.push('SOAPBOX: 42e Friese Elfsteden Contest 2026');
+  h.push('SOAPBOX: Sectie '+sectionName(band)+', single band single transmitter');
+  h.push('SOAPBOX: Punten '+st.pts+' (eigen regio '+st.eigen+'x1, buiten regio '+st.buiten+'x5, buitenland '+st.dx+'x2, dubbel '+st.dupe+')');
+  h.push('SOAPBOX: Multipliers '+st.nm+': '+([...st.mults].join(', ')||'geen'));
+  h.push('SOAPBOX: Score '+st.pts+' x '+st.nm+' = '+st.score);
+  h.push('CREATED-BY: Elfsteden-log 2.3 door PD3RAH (www.pd3rah.nl)');
+  const myEx=[cabTok(s.call).padEnd(13),'59 '.padEnd(4),normReg(s.reg).padEnd(3),cabTok(s.qth).padEnd(14)];
+  L.forEach(q=>{
+    const fr=band==='80m'?String(Math.round(parseFloat(q.freq)*1000)):'144';
+    const mo=q.mode==='SSB'?'PH':'FM';
+    h.push(['QSO:',fr.padStart(5),mo,ymd(q.ts,true),hhmm(q.ts,true),cabTok(s.call).padEnd(13),(q.rstS||'59').padEnd(3),normReg(s.reg).padEnd(3),cabTok(s.qth).padEnd(14),
+      cabTok(q.call).padEnd(13),(q.rstR||'59').padEnd(3),(q.dx?(normReg(q.regR)||'DX'):normReg(q.regR)).padEnd(3),cabTok(q.qth)].join(' '));
+  });
+  h.push('END-OF-LOG:');
+  return h.join('\r\n')+'\r\n';
+}
+function csv(band){
+  const s=state.station,st=stats(band),u=isUtc();
+  const lines=['# 42e Friese Elfsteden Contest 2026 - '+band,
+    '# Call: '+s.call+' | Regio: R-'+normReg(s.reg)+' | QTH: '+s.qth+(s.ops?' | Operators: '+s.ops:''),
+    '# Naam: '+s.name+' | Adres: '+s.addr+', '+s.city,
+    '# Sectie: '+sectionName(band)+' | Tijd: '+(u?'UTC':'lokaal'),
+    '# Punten: '+st.pts+' | Multipliers: '+st.nm+' | Score: '+st.score,
+    ['Nr','Datum','Tijd','Freq MHz','Mode','Call','RST gegeven','Regio gegeven','RST ontvangen','Regio ontvangen','QTH','Punten','Multiplier','Dubbel'].join(';')];
+  state.logs[band].forEach((q,i)=>lines.push([i+1,ymd(q.ts,u),hhmm(q.ts,u),q.freq.replace('.',','),q.mode,q.call,q.rstS,q.regS,q.rstR,q.dx?(q.regR||'DX'):q.regR,'"'+q.qth.replace(/"/g,'""')+'"',q.pts,q.mult,q.dupe?'ja':''].join(';')));
+  return lines.join('\r\n');
+}
+function need(){const s=state.station;const miss=[];if(!s.call)miss.push('call');if(!normReg(s.reg))miss.push('regio');if(!s.qth)miss.push('QTH');if(!s.name)miss.push('naam');if(!s.addr)miss.push('adres');
+  if(miss.length)setStatus('Let op: nog niet ingevuld – '+miss.join(', ')+' (verplicht in het log).','dupe');}
+$('btnCab').addEventListener('click',()=>{need();download(fname('log',state.band),cabrillo(state.band),'text/plain',false);});
+$('btnCsv').addEventListener('click',()=>{need();download(fname('csv',state.band),csv(state.band),'text/csv',true);});
+$('btnBackup').addEventListener('click',()=>{download(fname('json'),JSON.stringify(state,null,1),'application/json',false);lastBackup=Date.now();if(!health.file)qsoSinceBackup=0;renderHealth();});
+$('btnAuto').addEventListener('click',async()=>{
+  if(!window.showSaveFilePicker){setStatus('Automatische back-up naar bestand werkt alleen in Chrome of Edge. Gebruik in deze browser regelmatig "Back-up opslaan".','dupe');return;}
+  try{const fh=await showSaveFilePicker({suggestedName:fname('json').replace('.json','_autobackup.json'),types:[{description:'Elfsteden-log back-up',accept:{'application/json':['.json']}}]});
+    fileHandle=fh;health.file=true;$('btnResume').hidden=true;await tx('kv','readwrite',s=>s.put(fh,'fh'));writeFile(JSON.stringify(state));
+    setStatus('Automatische back-up actief: na elke QSO wordt '+fh.name+' bijgewerkt.','ok');}catch(e){}
+});
+$('btnResume').addEventListener('click',async()=>{
+  try{if(fileHandle&&(await fileHandle.requestPermission({mode:'readwrite'}))==='granted'){health.file=true;$('btnResume').hidden=true;writeFile(JSON.stringify(state));setStatus('Automatische back-up hervat.','ok');}}catch(e){setStatus('Back-upbestand niet bereikbaar; stel opnieuw in.','dupe');}
+  renderHealth();
+});
+$('btnSnaps').addEventListener('click',async()=>{
+  const sel=$('snapSel');sel.innerHTML='';
+  let rows=[];
+  await tx('snaps','readonly',s=>{const r=s.openCursor(null,'prev');r.onsuccess=()=>{const c=r.result;if(c){rows.push({k:c.key,v:c.value});c.continue();}};return r;});
+  if(!rows.length){setStatus(db?'Nog geen herstelpunten.':'Herstelpunten niet beschikbaar (database werkt niet in deze browser).','dupe');return;}
+  rows.forEach(({k,v})=>{let n='';try{const st=JSON.parse(v.json);n=BANDS.map(b=>b+': '+(st.logs[b]||[]).length).join(', ');}catch(e){}
+    const o=document.createElement('option');o.value=k;o.textContent=new Date(v.t).toLocaleString('nl-NL')+' – '+v.reason+' – '+n;sel.appendChild(o);});
+  sel.selectedIndex=0;$('snapDlg').showModal();
+  $('snapNo').onclick=()=>$('snapDlg').close();
+  $('snapYes').onclick=async()=>{const k=+sel.value;const v=rows.find(r=>r.k===k);if(!v)return;$('snapDlg').close();
+    if(await ask('Log terugzetten naar '+sel.options[sel.selectedIndex].textContent+'?')){
+      await snapshot('Vóór herstel',JSON.stringify(state));merge(JSON.parse(v.v.json));save('Hersteld naar herstelpunt');renderAll();clearForm();setStatus('Herstelpunt teruggezet.','ok');}};
+});
+$('btnRestore').addEventListener('click',()=>$('restoreFile').click());
+$('restoreFile').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{const s=JSON.parse((await f.text()).replace(/^﻿/,''));if(!s.logs)throw 0;
+    if(await ask('Huidig log vervangen door back-up ('+BANDS.map(b=>b+': '+((s.logs[b]||[]).length)).join(', ')+' QSO’s)?')){await snapshot('Vóór terugzetten back-up',JSON.stringify(state));merge(s);save('Back-up teruggezet');renderAll();clearForm();}
+  }catch(err){setStatus('Ongeldig back-upbestand.','dupe');}
+  e.target.value='';
+});
+$('btnReset').addEventListener('click',async()=>{if(await ask('Alle '+state.logs[state.band].length+' QSO’s op '+state.band+' wissen? Maak eerst een back-up!')){await snapshot('Vóór leegmaken '+state.band,JSON.stringify(state));state.logs[state.band]=[];save('Band '+state.band+' leeggemaakt');renderAll();}});
+$('btnPrint').addEventListener('click',()=>{
+  need();const s=state.station,u=isUtc();
+  const bands=BANDS.filter(b=>state.logs[b].length);
+  $('printarea').innerHTML=bands.map((b,i)=>{const st=stats(b);
+    return '<div class="'+(i?'pb':'')+'"><h3 style="margin:0 0 4px">42e Friese Elfsteden Contest 2026 – log '+b.replace('m',' m')+'</h3>'+
+    '<p style="margin:0 0 8px">Call: <b>'+esc(s.call)+'</b> &nbsp; Regio: R-'+esc(normReg(s.reg))+' &nbsp; QTH: '+esc(s.qth)+' &nbsp; Sectie: '+esc(sectionName(b))+' – single band, single transmitter'+(s.ops?' &nbsp; Operators: '+esc(s.ops):'')+
+    '<br>Naam: '+esc(s.name)+' &nbsp; Adres: '+esc(s.addr)+', '+esc(s.city)+(s.mail?' &nbsp; E-mail: '+esc(s.mail):'')+' &nbsp; Tijden in '+(u?'UTC':'lokale tijd')+'</p>'+
+    '<table><thead><tr><th>#</th><th>Tijd</th><th>Freq</th><th>Mode</th><th>Call</th><th>RST gev.</th><th>Regio gev.</th><th>RST ontv.</th><th>Regio ontv.</th><th>QTH</th><th>Ptn</th><th>Mult</th></tr></thead><tbody>'+rowsHtml(b,false)+'</tbody></table>'+
+    '<h4 style="margin:12px 0 4px">Scoreberekening '+b.replace('m',' m')+'</h4>'+
+    '<table style="width:auto"><tr><td>Stations eigen regio</td><td>'+st.eigen+' × 1</td><td>= '+st.eigen+'</td></tr>'+
+    '<tr><td>Stations buiten eigen regio</td><td>'+st.buiten+' × 5</td><td>= '+(st.buiten*5)+'</td></tr>'+
+    '<tr><td>Buitenlandse stations</td><td>'+st.dx+' × 2</td><td>= '+(st.dx*2)+'</td></tr>'+
+    '<tr><td>Dubbele verbindingen</td><td>'+st.dupe+' × 0</td><td>= 0</td></tr>'+
+    '<tr><td><b>Totaal punten</b></td><td></td><td><b>'+st.pts+'</b></td></tr>'+
+    '<tr><td>Multipliers ('+([...st.mults].join(', ')||'geen')+')</td><td></td><td><b>'+st.nm+'</b></td></tr>'+
+    '<tr><td><b>Eindscore</b></td><td>'+st.pts+' × '+st.nm+'</td><td><b>'+st.score+'</b></td></tr></table>'+
+    '<p class="sig">Ik verklaar dat ik mij aan het reglement heb gehouden.<br><br>Datum: ____________________ &nbsp;&nbsp;&nbsp; Handtekening: ______________________________</p><p style="font-size:9px;color:#888;margin-top:16px">Gemaakt met Elfsteden-log 2.3 door Richard Hendriksen, PD3RAH – www.pd3rah.nl – © 2026 Richard Hendriksen, alle rechten voorbehouden – gebruik op eigen risico en verantwoordelijkheid.</p></div>';}).join('')||'<p>Geen QSO’s gelogd.</p>';
+  window.print();
+});
+
+if(APP){$('btnAuto').hidden=true;$('btnResume').hidden=true;$('btnFolder').hidden=false;$('btnFolder').onclick=()=>APP.openFolder();}
+{const q='?v=2.3.0&t='+(APP?'app':'web');const a=$('surveyLink');a.href+=q;document.querySelectorAll('.surveyLink2').forEach(x=>x.href+=q);}
+load().then(()=>{if(APP)$('btnResume').hidden=true;renderAll();clearForm();renderHealth();try{bc&&bc.postMessage('hello');}catch(e){}});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{
+  "name": "elfsteden-log",
+  "version": "2.3.0",
+  "description": "Logprogramma voor de 42e Friese Elfsteden Contest",
+  "main": "main.js",
+  "scripts": {
+    "dist": "electron-builder --win nsis --x64"
+  },
+  "keywords": [],
+  "author": "Richard Hendriksen, PD3RAH <www.pd3rah.nl>",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "electron-builder": "^26.18.0"
+  },
+  "productName": "Elfsteden-log",
+  "homepage": "https://www.pd3rah.nl",
+  "build": {
+    "appId": "nl.pd3rah.elfstedenlog",
+    "productName": "Elfsteden-log",
+    "copyright": "© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.",
+    "files": [
+      "main.js",
+      "preload.js",
+      "elfsteden-log.html",
+      "handleiding.html",
+      "icon.png"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "icon.png",
+      "signAndEditExecutable": true
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Elfsteden-log",
+      "artifactName": "Elfsteden-log-Setup-${version}.exe",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "license": "licentie.txt",
+      "language": "1043",
+      "deleteAppDataOnUninstall": false
+    },
+    "publish": null
+  }
+}

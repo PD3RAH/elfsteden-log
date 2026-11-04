@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<!--
+  Enquête Elfsteden-log – © 2026 Richard Hendriksen, PD3RAH – www.pd3rah.nl
+  Plaatsen op: https://www.pd3rah.nl/elfsteden-enquete.html
+  Verzenden gaat via FormSubmit (formsubmit.co) naar info@pd3rah.nl.
+  Na activatie kun je hieronder bij ENDPOINT het e-mailadres vervangen door de
+  geheime code die FormSubmit je mailt, zodat je adres niet in de pagina staat.
+-->
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquête Elfsteden-log – PD3RAH</title>
+<style>
+:root{--acc:#1d5fa8;--ink:#1c2430;--mut:#6b7684;--line:#d9dee4;--ok:#1f7a3d;--warn:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#f4f6f8;color:var(--ink)}
+header{background:var(--acc);color:#fff;padding:18px 20px}
+header h1{margin:0;font-size:22px}header p{margin:4px 0 0;opacity:.9;font-size:14px}
+main{max-width:720px;margin:0 auto;padding:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:14px}
+.q{margin-bottom:18px}.q:last-child{margin-bottom:0}
+.q>label,.q>.lbl{display:block;font-weight:600;margin-bottom:6px}
+.opt{color:var(--mut);font-weight:400;font-size:13px}
+input[type=text],input[type=email],textarea,select{width:100%;font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px}
+textarea{min-height:90px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--acc);outline-offset:-1px}
+.choices{display:flex;flex-wrap:wrap;gap:8px}
+.choices label{display:flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer;font-weight:400}
+.choices input{accent-color:var(--acc)}
+.stars{display:flex;flex-direction:row-reverse;justify-content:flex-end;gap:2px}
+.stars input{position:absolute;opacity:0;width:0}
+.stars label{font-size:32px;line-height:1;color:#c9d0d8;cursor:pointer;padding:0 2px}
+.stars input:checked~label,.stars label:hover,.stars label:hover~label{color:#e0a400}
+.stars input:focus-visible+label{outline:2px solid var(--acc);border-radius:4px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.row2{grid-template-columns:1fr}}
+button{font:inherit;font-weight:600;padding:10px 22px;border:none;border-radius:6px;background:var(--acc);color:#fff;cursor:pointer}
+button:disabled{opacity:.6;cursor:wait}
+.hp{position:absolute;left:-5000px}
+#msg{margin-top:12px;font-weight:600}#msg.ok{color:var(--ok)}#msg.err{color:var(--warn)}
+.small{font-size:13px;color:var(--mut)}
+#done{display:none;text-align:center;padding:30px 20px}
+#done h2{color:var(--ok);margin-top:0}
+footer{text-align:center;font-size:13px;color:var(--mut);padding:10px 20px 30px}
+footer a{color:var(--acc)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Enquête Elfsteden-log</h1>
+  <p>Wat vond je van het logprogramma voor de 42e Friese Elfsteden Contest?</p>
+</header>
+<main>
+<form id="f" novalidate>
+  <div class="card">
+    <p style="margin-top:0">Bedankt dat je Elfsteden-log hebt gebruikt! Met jouw antwoorden kan ik het programma verbeteren. Invullen duurt ongeveer 2 minuten. Alle vragen zijn vrijwillig.</p>
+    <div class="row2">
+      <div class="q"><label for="call">Call <span class="opt">(optioneel)</span></label><input type="text" id="call" name="Call" autocomplete="off" style="text-transform:uppercase"></div>
+      <div class="q"><label for="naam">Naam <span class="opt">(optioneel)</span></label><input type="text" id="naam" name="Naam"></div>
+    </div>
+    <div class="q"><label for="email">E-mail <span class="opt">(optioneel, alleen als je een antwoord wilt)</span></label><input type="email" id="email" name="email"></div>
+  </div>
+
+  <div class="card">
+    <div class="q"><span class="lbl">Welke versie heb je gebruikt?</span>
+      <div class="choices">
+        <label><input type="radio" name="Versie" value="Windows (geïnstalleerd)"> Windows (geïnstalleerd)</label>
+        <label><input type="radio" name="Versie" value="Browserversie"> Browserversie</label>
+        <label><input type="radio" name="Versie" value="Weet ik niet"> Weet ik niet</label>
+      </div></div>
+    <div class="q"><span class="lbl">Op welke band(en) heb je gelogd?</span>
+      <div class="choices">
+        <label><input type="checkbox" name="Band" value="80 m"> 80 m</label>
+        <label><input type="checkbox" name="Band" value="2 m"> 2 m</label>
+      </div></div>
+  </div>
+
+  <div class="card">
+    <div class="q"><span class="lbl">Wat is je totaaloordeel?</span>
+      <div class="stars" data-name="Totaaloordeel">
+        <input type="radio" id="t5" name="Totaaloordeel" value="5 van 5"><label for="t5" title="Uitstekend">★</label>
+        <input type="radio" id="t4" name="Totaaloordeel" value="4 van 5"><label for="t4" title="Goed">★</label>
+        <input type="radio" id="t3" name="Totaaloordeel" value="3 van 5"><label for="t3" title="Redelijk">★</label>
+        <input type="radio" id="t2" name="Totaaloordeel" value="2 van 5"><label for="t2" title="Matig">★</label>
+        <input type="radio" id="t1" name="Totaaloordeel" value="1 van 5"><label for="t1" title="Slecht">★</label>
+      </div></div>
+    <div class="q"><span class="lbl">Hoe makkelijk was het programma te gebruiken?</span>
+      <div class="stars">
+        <input type="radio" id="g5" name="Gebruiksgemak" value="5 van 5"><label for="g5" title="Heel makkelijk">★</label>
+        <input type="radio" id="g4" name="Gebruiksgemak" value="4 van 5"><label for="g4" title="Makkelijk">★</label>
+        <input type="radio" id="g3" name="Gebruiksgemak" value="3 van 5"><label for="g3" title="Gaat wel">★</label>
+        <input type="radio" id="g2" name="Gebruiksgemak" value="2 van 5"><label for="g2" title="Lastig">★</label>
+        <input type="radio" id="g1" name="Gebruiksgemak" value="1 van 5"><label for="g1" title="Heel lastig">★</label>
+      </div></div>
+    <div class="q"><span class="lbl">Was de handleiding duidelijk?</span>
+      <div class="choices">
+        <label><input type="radio" name="Handleiding" value="Ja"> Ja</label>
+        <label><input type="radio" name="Handleiding" value="Deels"> Deels</label>
+        <label><input type="radio" name="Handleiding" value="Nee"> Nee</label>
+        <label><input type="radio" name="Handleiding" value="Niet gelezen"> Niet gelezen</label>
+      </div></div>
+  </div>
+
+  <div class="card">
+    <div class="q"><label for="goed">Wat vond je goed?</label><textarea id="goed" name="Wat was goed"></textarea></div>
+    <div class="q"><label for="beter">Wat moet er beter of wat mis je?</label><textarea id="beter" name="Wat kan beter"></textarea></div>
+    <div class="q"><label for="fout">Ben je fouten of problemen tegengekomen? <span class="opt">(bijv. verkeerde punten, vastlopen, export)</span></label><textarea id="fout" name="Fouten of problemen"></textarea></div>
+  </div>
+
+  <div class="card">
+    <div class="q"><span class="lbl">Gebruik je Elfsteden-log volgend jaar weer?</span>
+      <div class="choices">
+        <label><input type="radio" name="Volgend jaar" value="Ja"> Ja</label>
+        <label><input type="radio" name="Volgend jaar" value="Misschien"> Misschien</label>
+        <label><input type="radio" name="Volgend jaar" value="Nee"> Nee</label>
+      </div></div>
+    <div class="q choices"><label><input type="checkbox" name="Contact" value="Ja, mag contact opnemen"> Je mag contact met mij opnemen over mijn antwoorden</label></div>
+    <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <button type="submit" id="send">Versturen</button>
+    <div id="msg" role="status"></div>
+    <p class="small">Je antwoorden worden per e-mail naar Richard Hendriksen (PD3RAH) gestuurd via de dienst FormSubmit. Ze worden alleen gebruikt om Elfsteden-log te verbeteren en niet gedeeld met anderen.</p>
+  </div>
+</form>
+
+<div id="done" class="card">
+  <h2>Bedankt!</h2>
+  <p>Je antwoorden zijn verstuurd. Hartelijk dank voor je hulp bij het verbeteren van Elfsteden-log.</p>
+  <p>73, Richard – PD3RAH</p>
+</div>
+</main>
+<footer>Elfsteden-log · © 2026 Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a></footer>
+
+<script>
+(function(){
+"use strict";
+// Na activatie bij FormSubmit: vervang het e-mailadres door de geheime code uit hun mail.
+const ENDPOINT='https://formsubmit.co/ajax/info@pd3rah.nl';
+const TO='info@pd3rah.nl';
+const f=document.getElementById('f'),btn=document.getElementById('send'),msg=document.getElementById('msg');
+const qs=new URLSearchParams(location.search);
+const progVersie=qs.get('v')||'';
+if(qs.get('t')==='app'){const r=f.querySelector('input[name="Versie"][value^="Windows"]');if(r)r.checked=true;}
+if(qs.get('t')==='web'){const r=f.querySelector('input[name="Versie"][value="Browserversie"]');if(r)r.checked=true;}
+
+function collect(){
+  const d={};const fd=new FormData(f);
+  for(const [k,v] of fd.entries()){if(k==='_honey')continue;const val=String(v).trim();if(!val)continue;d[k]=d[k]?d[k]+', '+val:val;}
+  if(d.Call)d.Call=d.Call.toUpperCase();
+  return d;
+}
+function asText(d){return Object.entries(d).map(([k,v])=>k+': '+v).join('\n');}
+f.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(f._honey.value)return; // spam
+  const d=collect();
+  const inhoud=Object.keys(d).filter(k=>!['Call','Naam','email'].includes(k));
+  if(!inhoud.length){msg.className='err';msg.textContent='Vul minstens één vraag in.';return;}
+  if(d.email&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email)){msg.className='err';msg.textContent='Het e-mailadres lijkt niet te kloppen.';document.getElementById('email').focus();return;}
+  const payload=Object.assign({},d,{
+    'Programmaversie':progVersie||'onbekend',
+    _subject:'Enquête Elfsteden-log'+(d.Call?' – '+d.Call:''),
+    _template:'table',_captcha:'false'
+  });
+  if(!d.email)delete payload.email;
+  btn.disabled=true;msg.className='';msg.textContent='Bezig met versturen…';
+  try{
+    const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)});
+    const j=await r.json().catch(()=>({}));
+    if(r.ok&&(j.success===true||j.success==='true')){f.style.display='none';document.getElementById('done').style.display='block';window.scrollTo(0,0);return;}
+    throw new Error(j.message||('HTTP '+r.status));
+  }catch(err){
+    btn.disabled=false;msg.className='err';
+    const body=encodeURIComponent('Enquête Elfsteden-log\n\n'+asText(payload).replace(/^_.*$/gm,'').trim());
+    msg.innerHTML='Versturen is niet gelukt ('+String(err.message).replace(/[<>&]/g,'')+'). Probeer het later opnieuw, of <a href="mailto:'+TO+'?subject='+encodeURIComponent('Enquête Elfsteden-log')+'&body='+body+'">verstuur je antwoorden met je eigen e-mailprogramma</a> naar '+TO+'.';
+  }
+});
+})();
+</script>
+</body>
+</html>

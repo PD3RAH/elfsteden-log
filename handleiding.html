@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handleiding Elfsteden-log</title>
+<style>
+body{margin:0;font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#1c2430;background:#f4f6f8}
+.page{max-width:820px;margin:0 auto;background:#fff;padding:32px 40px 48px}
+h1{color:#1d5fa8;font-size:28px;margin:0 0 4px}
+.sub{color:#6b7684;margin:0 0 24px}
+h2{color:#1d5fa8;font-size:20px;border-bottom:2px solid #e3e8ee;padding-bottom:4px;margin-top:32px}
+h3{font-size:16px;margin:20px 0 4px}
+ol li,ul li{margin-bottom:6px}
+.tip{background:#e8f1fb;border-left:4px solid #1d5fa8;padding:10px 14px;margin:14px 0;border-radius:4px}
+.let{background:#fff4e5;border-left:4px solid #e08a00;padding:10px 14px;margin:14px 0;border-radius:4px}
+table{border-collapse:collapse;width:100%;margin:10px 0}
+td,th{border:1px solid #d9dee4;padding:6px 10px;text-align:left;vertical-align:top}
+th{background:#f0f3f6}
+kbd{background:#f0f3f6;border:1px solid #c9d0d8;border-bottom-width:2px;border-radius:4px;padding:0 6px;font:14px monospace}
+.toc a{color:#1d5fa8;text-decoration:none}
+.foot{margin-top:40px;font-size:13px;color:#6b7684;border-top:1px solid #e3e8ee;padding-top:12px}
+@media print{body{background:#fff}.page{padding:0;max-width:none}h2{page-break-after:avoid}.tip,.let,table{page-break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<h1>Handleiding Elfsteden-log</h1>
+<p class="sub">Logprogramma voor de 42e Friese Elfsteden Contest (2026) · versie 2.3<br>Gemaakt door Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a></p>
+
+<div class="toc">
+<b>Inhoud</b>
+<ol>
+<li><a href="#wat">Wat is Elfsteden-log?</a></li>
+<li><a href="#install">Installeren</a></li>
+<li><a href="#start">De eerste keer: je gegevens invullen</a></li>
+<li><a href="#loggen">Een verbinding loggen</a></li>
+<li><a href="#punten">Punten, multipliers en score</a></li>
+<li><a href="#fout">Een fout verbeteren</a></li>
+<li><a href="#veilig">Je log is veilig</a></li>
+<li><a href="#insturen">Het log insturen</a></li>
+<li><a href="#problemen">Problemen oplossen</a></li>
+<li><a href="#enquete">Je mening geven</a></li>
+<li><a href="#disclaimer">Disclaimer en auteursrecht</a></li>
+</ol>
+</div>
+
+<h2 id="wat">1. Wat is Elfsteden-log?</h2>
+<p>Elfsteden-log is een programma om je verbindingen bij te houden tijdens de <b>42e Friese Elfsteden Contest</b>.</p>
+<p>Het programma doet veel werk voor je:</p>
+<ul>
+<li>Het houdt voor <b>80 m</b> en <b>2 m</b> elk een apart log bij.</li>
+<li>Het rekent de punten uit.</li>
+<li>Het ziet zelf of iemand in een Friese stad zit (een multiplier).</li>
+<li>Het waarschuwt als je een station al gewerkt hebt.</li>
+<li>Het maakt aan het eind een log om in te sturen: op papier, als PDF of als Cabrillo-bestand.</li>
+</ul>
+<div class="tip"><b>De contest in het kort:</b> zondag 22 november 2026, van 11.00 tot 14.00 uur (lokale tijd). Banden: 80 m en 2 m. Modes: SSB en FM. Je geeft door: call, rapport + regionummer en QTH.</div>
+
+<h2 id="install">2. Installeren</h2>
+<h3>Windows (aanbevolen)</h3>
+<ol>
+<li>Dubbelklik op het bestand <b>Elfsteden-log-Setup.exe</b>.</li>
+<li>Windows kan een blauw scherm laten zien: <i>"Windows heeft uw pc beschermd"</i>. Dat komt doordat het programma niet bij Microsoft is geregistreerd. Klik op <b>Meer informatie</b> en daarna op <b>Toch uitvoeren</b>.</li>
+<li>Volg de stappen van het installatieprogramma.</li>
+<li>Op je bureaublad en in het Startmenu staat nu <b>Elfsteden-log</b>. Dubbelklik om te starten.</li>
+</ol>
+<p>Verwijderen gaat via <b>Instellingen → Apps</b>. Je logbestanden blijven dan gewoon bewaard.</p>
+<h3>Zonder installatie (in de browser)</h3>
+<p>Je kunt ook het bestand <b>elfsteden-log.html</b> openen in Chrome, Edge of Firefox. Het werkt dan in de browser, ook zonder internet. Lees in dat geval goed <a href="#veilig">hoofdstuk 7</a> over back-ups.</p>
+
+<h2 id="start">3. De eerste keer: je gegevens invullen</h2>
+<p>Bovenaan staat het blok <b>Station &amp; deelnemer</b>. Vul dit één keer in. Het programma onthoudt het.</p>
+<table>
+<tr><th>Veld</th><th>Wat vul je in?</th></tr>
+<tr><td>Eigen call</td><td>Je roepnaam, bijvoorbeeld PD3RAH.</td></tr>
+<tr><td>Eigen regio</td><td>Alleen het nummer van je regio, bijvoorbeeld <b>14</b>. Dit is belangrijk: zonder regionummer kan het programma geen punten rekenen.</td></tr>
+<tr><td>Eigen QTH</td><td>Je woonplaats of de plaats waar je zendt.</td></tr>
+<tr><td>Categorie</td><td>Single operator (alleen jij) of Multi-operator (meer mensen, één zender per band).</td></tr>
+<tr><td>Operator(s)</td><td>Bij multi-operator: de calls van de operators.</td></tr>
+<tr><td>Naam, adres, postcode en plaats</td><td>Deze moeten volgens het reglement op het log staan.</td></tr>
+<tr><td>Tijdweergave</td><td>Laat staan op <b>Lokale tijd</b>. De contest gebruikt lokale tijd.</td></tr>
+</table>
+<p>Onder het blok zie je in welke <b>sectie</b> je meedoet, bijvoorbeeld "80 m stations buiten R-14". Dat rekent het programma zelf uit.</p>
+
+<h2 id="loggen">4. Een verbinding loggen</h2>
+<ol>
+<li>Kies bovenaan de band: <b>80 m</b> of <b>2 m</b>. Elke band heeft een eigen log.</li>
+<li>Controleer de <b>frequentie</b> (in MHz, bijvoorbeeld 3.650). Die blijft staan tot je hem verandert.</li>
+<li>Kies de <b>mode</b>: SSB of FM.</li>
+<li>Typ de <b>call</b> van het andere station.</li>
+<li>Vul het ontvangen <b>rapport</b> in (standaard 59), het <b>regionummer</b> en de <b>QTH</b> van het andere station.</li>
+<li>Druk op <kbd>Enter</kbd>. De verbinding staat nu in het log en is meteen opgeslagen.</li>
+</ol>
+<p>De <b>tijd</b> hoef je niet in te vullen. Het programma neemt de tijd van dat moment. Wil je een andere tijd? Typ die dan als vier cijfers, bijvoorbeeld <b>1135</b> voor 11.35 uur.</p>
+<p>Met <kbd>Esc</kbd> maak je het invulveld leeg.</p>
+
+<h3>Wat zie je tijdens het typen?</h3>
+<ul>
+<li><b style="color:#1f7a3d">Groen "Nieuw station"</b>: dit station heb je nog niet gewerkt op deze band.</li>
+<li><b style="color:#b3261e">Rood "DUBBEL"</b>: dit station heb je al gewerkt op deze band. Volgens het reglement telt het niet nog een keer. Log je het toch, dan krijgt het 0 punten.</li>
+<li><b style="color:#1f7a3d">"★ NIEUWE MULTIPLIER"</b>: het station zit in een Friese stad die je nog niet had.</li>
+</ul>
+
+<h3>Buitenlandse stations</h3>
+<p>Het programma ziet aan de call of een station uit het buitenland komt. Alles wat niet met PA t/m PI begint, is buitenland. Het vakje <b>Buitenland</b> gaat dan vanzelf aan. Een regionummer is dan niet nodig. Klopt het niet? Zet het vakje dan zelf aan of uit.</p>
+
+<div class="let"><b>Let op:</b> verbindingen via een repeater (omzetter) tellen niet mee. Log die niet.</div>
+
+<h2 id="punten">5. Punten, multipliers en score</h2>
+<table>
+<tr><th>Soort station</th><th>Punten</th></tr>
+<tr><td>Station in je eigen regio</td><td>1 punt</td></tr>
+<tr><td>Station in een andere Nederlandse regio</td><td>5 punten</td></tr>
+<tr><td>Buitenlands station</td><td>2 punten</td></tr>
+<tr><td>Dubbel gewerkt station</td><td>0 punten</td></tr>
+</table>
+<p><b>Multipliers</b> zijn de elf Friese steden plus de klunplaats:<br>
+Leeuwarden, Sneek, IJlst, Sloten, Staveren, Hindelopen, Workum, Bolsward, Harlingen, Franeker, Dokkum en Bartlehiem.</p>
+<p>Elke plaats telt één keer per band, dus maximaal 12. Het programma herkent ook de Friese namen, zoals <i>Ljouwert</i>, <i>Snits</i> en <i>Harns</i>. In het blok <b>Score</b> worden de plaatsen die je al hebt groen.</p>
+<p><b>Je score = punten × aantal multipliers.</b> Het programma rekent dit voor elke band apart uit.</p>
+
+<h2 id="fout">6. Een fout verbeteren</h2>
+<ul>
+<li><b>Wijzigen:</b> klik in het log op <b>wijzig</b> achter de verbinding. De gegevens komen weer in het invulveld. Pas ze aan en druk op <kbd>Enter</kbd>.</li>
+<li><b>Verwijderen:</b> klik op het rode <b>×</b> en bevestig met <b>Ja</b>.</li>
+<li><b>Per ongeluk iets verwijderd?</b> Klik op <b>Herstelpunten…</b>. Kies het moment van vóór de fout en klik op <b>Terugzetten</b>. Het programma maakt na elke wijziging zo'n herstelpunt.</li>
+</ul>
+
+<h2 id="veilig">7. Je log is veilig</h2>
+<p>Het programma slaat elke verbinding meteen op zodra je op <kbd>Enter</kbd> drukt. Je hoeft nooit zelf op "opslaan" te klikken.</p>
+<h3>In de Windows-versie</h3>
+<p>Je log wordt na elke verbinding als echt bestand op je computer gezet, in de map:</p>
+<p style="font-family:monospace;background:#f0f3f6;padding:6px 10px;border-radius:4px">Documenten\Elfsteden-log</p>
+<ul>
+<li><b>elfsteden-log.json</b>: je log zoals het nu is.</li>
+<li><b>elfsteden-log.vorige.json</b>: de stand van net daarvoor.</li>
+<li>De map <b>reservekopieen</b>: elke minuut een extra kopie.</li>
+</ul>
+<p>Valt de stroom uit of gaat de computer per ongeluk uit? Start het programma opnieuw. Je log staat er weer. Hooguit de verbinding die je op dat moment aan het intypen was, ben je kwijt.</p>
+<p>Via de knop <b>Map met logbestanden openen</b> kom je direct bij deze map.</p>
+<h3>In de browserversie</h3>
+<ul>
+<li>Het log wordt in de browser bewaard. Gebruik altijd <b>dezelfde browser</b> op dezelfde computer.</li>
+<li>Wis tijdens de contest niet je browsergeschiedenis of cookies.</li>
+<li>Klik in Chrome of Edge op <b>Automatische back-up naar bestand…</b> en kies een plek, bij voorkeur een USB-stick. Dan wordt na elke verbinding ook een bestand bijgewerkt.</li>
+<li>Gebruik je Firefox? Klik dan af en toe op <b>Back-up opslaan</b>.</li>
+</ul>
+<h3>Bovenaan in het scherm</h3>
+<p>Daar zie je of het opslaan werkt. Een vinkje ✔ betekent: goed. Een kruisje ✖ betekent: er is iets mis. Maak dan meteen een back-up.</p>
+<p>Open je het programma twee keer tegelijk? Dan wordt het tweede scherm op slot gezet. Zo kunnen ze elkaar niet overschrijven.</p>
+<h3>Een back-up terugzetten</h3>
+<p>Klik op <b>Back-up terugzetten</b> en kies het back-upbestand (een .json-bestand). Dit werkt ook op een andere computer.</p>
+
+<h2 id="insturen">8. Het log insturen</h2>
+<p>Het reglement vraagt: voor iedere band een apart log, met een eigen scoreberekening, je naam en je adres, ondertekend.</p>
+<h3>Op papier of als PDF</h3>
+<ol>
+<li>Klik op <b>Afdrukken / PDF</b>.</li>
+<li>Kies je printer, of kies <b>Opslaan als PDF</b>.</li>
+<li>Je krijgt per band een pagina met het log, de scoreberekening en een plek voor je handtekening.</li>
+<li>Onderteken het log.</li>
+</ol>
+<h3>Als Cabrillo-bestand</h3>
+<p>Kies de band en klik op <b>Cabrillo deze band</b>. Je krijgt een .log-bestand dat je per e-mail kunt meesturen. Doe dit voor elke band apart.</p>
+<h3>Waar naartoe?</h3>
+<p>Stuur de logs <b>vóór 6 december 2026</b> naar:</p>
+<ul>
+<li>E-mail: <b>pa2ip at veron.nl</b> (vervang "at" door @)</li>
+<li>Of per post: Friese Elfsteden Contest, Buorren 91, 9081 AP Lekkum</li>
+</ul>
+<div class="tip"><b>Tip:</b> controleer je log altijd zelf voordat je het verstuurt. Kijk vooral naar de calls, de regionummers en de plaatsnamen.</div>
+
+<h2 id="problemen">9. Problemen oplossen</h2>
+<table>
+<tr><th>Probleem</th><th>Oplossing</th></tr>
+<tr><td>Ik krijg 0 punten.</td><td>Heb je je eigen regionummer ingevuld? En het regionummer van het andere station?</td></tr>
+<tr><td>Een Friese stad wordt niet herkend.</td><td>Controleer de spelling in de QTH. Tijdens het typen verschijnen de juiste namen als keuze.</td></tr>
+<tr><td>"Frequentie ligt niet in de band".</td><td>Typ de frequentie in MHz, bijvoorbeeld 3.650 of 145.400. Controleer of je de goede band hebt gekozen.</td></tr>
+<tr><td>Melding "buiten de contestperiode".</td><td>De verbinding wordt wel opgeslagen. Alleen verbindingen op 22 november tussen 11.00 en 14.00 uur tellen.</td></tr>
+<tr><td>Het scherm is grijs en "vergrendeld".</td><td>Het programma staat nog ergens anders open. Sluit dat, of klik op <b>hier verder werken</b>.</td></tr>
+<tr><td>Mijn log is weg (browserversie).</td><td>Open het bestand in dezelfde browser als eerst. Of zet je back-up terug.</td></tr>
+<tr><td>Mijn log is weg (Windows-versie).</td><td>Open de map Documenten\Elfsteden-log\reservekopieen en zet de nieuwste kopie terug met <b>Back-up terugzetten</b>.</td></tr>
+<tr><td>De letters zijn te klein.</td><td>Druk op <kbd>Ctrl</kbd> + <kbd>+</kbd> om alles groter te maken, en <kbd>Ctrl</kbd> + <kbd>-</kbd> voor kleiner.</td></tr>
+</table>
+
+<h2 id="enquete">10. Je mening geven</h2>
+<p>Wil je laten weten wat je van Elfsteden-log vond? Klik bovenaan in het programma op de knop <b>Enquête</b>. Er opent dan een pagina op <a href="https://www.pd3rah.nl/elfsteden-enquete.html">www.pd3rah.nl</a> in je internetbrowser.</p>
+<ul>
+<li>Je beantwoordt een paar korte vragen: wat goed was, wat beter kan en of je fouten bent tegengekomen.</li>
+<li>Alle vragen zijn vrijwillig. Je naam, call en e-mailadres invullen hoeft niet.</li>
+<li>Klik op <b>Versturen</b>. Je antwoorden gaan dan direct per e-mail naar de maker.</li>
+</ul>
+<p>Hiervoor heb je internet nodig. Het logprogramma zelf werkt gewoon zonder internet.</p>
+
+<h2 id="disclaimer">11. Disclaimer en auteursrecht</h2>
+<h3>Disclaimer</h3>
+<p>Dit programma wordt gratis en "as is" ter beschikking gesteld, zonder enige garantie op juistheid, volledigheid of storingsvrije werking. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het gebruik van dit programma. Controleer je log en berekende score altijd zelf voordat je deze definitief instuurt. Het officiële reglement en de beslissingen van de contestorganisatie zijn te allen tijde leidend.</p>
+<h3>Auteursrecht</h3>
+<p>© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden. Het programma, de handleiding, de vormgeving en de broncode zijn auteursrechtelijk beschermd. Je mag het programma gratis gebruiken voor eigen, niet-commercieel gebruik. Je mag het ongewijzigd en kosteloos aan anderen doorgeven, op voorwaarde dat de naamsvermelding, deze disclaimer en de auteursrechtvermelding intact blijven. Het is niet toegestaan het programma of de handleiding te verkopen, aan te passen, geheel of gedeeltelijk over te nemen of onder een andere naam te verspreiden zonder voorafgaande schriftelijke toestemming van de maker.</p>
+<h3>Software van derden</h3>
+<p>De Windows-versie bevat open-source onderdelen, waaronder Electron en Chromium. Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten worden met het programma meegeleverd (LICENSE.electron.txt en LICENSES.chromium.html in de installatiemap).</p>
+<h3>Reglement en namen</h3>
+<p>Het contestreglement, de naam van de contest en de bijbehorende gegevens zijn van de organisatie van de Friese Elfsteden Contest. Elfsteden-log is een onafhankelijk hulpmiddel en geen officiële uitgave van de contestorganisatie.</p>
+<h3>Jouw gegevens</h3>
+<p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden per e-mail (via de dienst FormSubmit) naar de maker gestuurd. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
+
+<p class="foot">Elfsteden-log 2.3 · gemaakt door Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a><br>© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.<br>
+Vragen over de contest zelf? Kijk op www.pi4lwd.nl of neem contact op met de organisatie.</p>
+</div>
+</body>
+</html>
