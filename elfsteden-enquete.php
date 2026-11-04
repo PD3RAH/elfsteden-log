@@ -114,17 +114,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tekst .= (strpos($v, "\n") !== false || mb_strlen($v) > 60) ? "$k:\n  " . str_replace("\n", "\n  ", $v) . "\n\n" : "$k: $v\n";
         }
         $subject = 'Enquête Elfsteden-log' . ($antw['Call'] ? ' – ' . $antw['Call'] : '');
+        // HTML-versie (tabel): Outlook voegt dan geen regels samen
+        $rows = '';
+        foreach ($antw as $k => $v) {
+            if ($v === '') continue;
+            $rows .= '<tr><td style="padding:6px 12px;border-bottom:1px solid #e3e8ee;font-weight:bold;vertical-align:top;white-space:nowrap">' . h($k)
+                   . '</td><td style="padding:6px 12px;border-bottom:1px solid #e3e8ee">' . nl2br(h($v)) . '</td></tr>';
+        }
+        $html = '<!DOCTYPE html><html><body style="font-family:Segoe UI,Arial,sans-serif;font-size:14px;color:#1c2430">'
+              . '<h2 style="color:#1d5fa8;margin:0 0 4px">Nieuwe enquête Elfsteden-log</h2>'
+              . '<p style="color:#6b7684;margin:0 0 12px">' . h($datum) . '</p>'
+              . '<table style="border-collapse:collapse">' . $rows . '</table></body></html>';
+        $boundary = 'b' . bin2hex(random_bytes(12));
+        $body = "This is a multi-part message in MIME format.\r\n\r\n"
+              . "--$boundary\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+              . chunk_split(base64_encode(str_replace("\n", "\r\n", $tekst)))
+              . "--$boundary\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+              . chunk_split(base64_encode($html))
+              . "--$boundary--\r\n";
+        $fromName = '=?UTF-8?B?' . base64_encode('Elfsteden-log enquête') . '?=';
         $headers = [
-            'From: Elfsteden-log enquête <' . MAIL_FROM . '>',
+            'From: ' . $fromName . ' <' . MAIL_FROM . '>',
             'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: 8bit',
+            'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
             'X-Mailer: Elfsteden-log-enquete',
         ];
         if ($antw['E-mail'] !== '') $headers[] = 'Reply-To: ' . $antw['E-mail'];  // al gevalideerd, dus geen header-injectie
         $encSubject = '=?UTF-8?B?' . base64_encode($subject) . '?=';
-        $ok = @mail(MAIL_TO, $encSubject, $tekst, implode("\r\n", $headers), '-f' . MAIL_FROM);
-        if (!$ok) $ok = @mail(MAIL_TO, $encSubject, $tekst, implode("\r\n", $headers));
+        $ok = @mail(MAIL_TO, $encSubject, $body, implode("\r\n", $headers), '-f' . MAIL_FROM);
+        if (!$ok) $ok = @mail(MAIL_TO, $encSubject, $body, implode("\r\n", $headers));
 
         // --- reservekopie (ook als de mail mislukt) ---
         ensureDataDir();
