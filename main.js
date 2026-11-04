@@ -1,7 +1,7 @@
-// Elfsteden-log 2.1 – gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl
+// Elfsteden-log – gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl
 // © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
 // Gebruik op eigen risico en verantwoordelijkheid.
-const { app, BrowserWindow, ipcMain, shell, Menu, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Menu, dialog, net } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -52,6 +52,12 @@ ipcMain.on('save', (e, json) => {
   catch (err) { e.returnValue = { ok: false, error: String(err) }; }
 });
 ipcMain.on('load', e => { try { e.returnValue = loadState(); } catch (err) { e.returnValue = { json: null }; } });
+ipcMain.handle('latestRelease', async () => {
+  const r = await net.fetch('https://api.github.com/repos/PD3RAH/elfsteden-log/releases/latest', { headers: { 'Accept': 'application/vnd.github+json', 'User-Agent': 'Elfsteden-log/' + app.getVersion() } });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const j = await r.json();
+  return { tag: j.tag_name, url: j.html_url, name: j.name, date: j.published_at };
+});
 ipcMain.handle('openFolder', () => { fs.mkdirSync(DIR(), { recursive: true }); return shell.openPath(DIR()); });
 
 let win = null;
@@ -67,11 +73,12 @@ else {
       { label: 'Beeld', submenu: [ { role: 'zoomIn', label: 'Groter' }, { role: 'zoomOut', label: 'Kleiner' }, { role: 'resetZoom', label: 'Normale grootte' }, { type: 'separator' }, { role: 'togglefullscreen', label: 'Volledig scherm' } ] },
       { label: 'Help', submenu: [
         { label: 'Handleiding', click: () => openHelp() },
+        { label: 'Controleren op nieuwe versie', click: () => win && win.webContents.executeJavaScript('window.checkUpdate && window.checkUpdate(true)') },
         { label: 'Enquête invullen…', click: () => shell.openExternal('https://www.pd3rah.nl/elfsteden-enquete.html?v=' + app.getVersion() + '&t=app') },
         { label: 'Website www.pd3rah.nl', click: () => shell.openExternal('https://www.pd3rah.nl') },
         { label: 'Over Elfsteden-log', click: () => dialog.showMessageBox(win, { type: 'info', title: 'Over Elfsteden-log',
           message: 'Elfsteden-log ' + app.getVersion(),
-          detail: 'Logprogramma voor de 42e Friese Elfsteden Contest (2026).\nGemaakt door Richard Hendriksen, PD3RAH\nwww.pd3rah.nl\n© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.\n\nGebruik op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid.\n\nLogbestanden: ' + DIR() }) } ] }
+          detail: 'Logprogramma voor de 42e Friese Elfsteden Contest (2026).\nGemaakt door Richard Hendriksen, PD3RAH\nmet behulp van Claude (AI van Anthropic)\nwww.pd3rah.nl\n© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.\n\nGebruik op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid.\n\nLogbestanden: ' + DIR() }) } ] }
     ]));
     win = new BrowserWindow({ width: 1300, height: 900, title: 'Elfsteden-log', icon: path.join(__dirname, 'icon.png'),
       webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, sandbox: false } });

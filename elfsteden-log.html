@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!--
-  Elfsteden-log 2.3 – logprogramma voor de 42e Friese Elfsteden Contest
-  Gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl
+  Elfsteden-log 2.4 – logprogramma voor de 42e Friese Elfsteden Contest
+  Gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl – met behulp van Claude (AI van Anthropic)
   © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
   Disclaimer: dit programma wordt gratis en "as is" ter beschikking gesteld, zonder
   enige garantie. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker
@@ -91,6 +91,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 </header>
 <main>
 <div id="banner" class="banner noprint" hidden></div>
+<div id="updBanner" class="banner noprint" hidden></div>
 
 <section class="card noprint">
   <h2>Station &amp; deelnemer</h2>
@@ -177,7 +178,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 <section id="printarea"></section>
 
 <footer class="card noprint muted" style="line-height:1.5">
-  <b style="color:var(--ink)">Elfsteden-log 2.3 – gemaakt door Richard Hendriksen, PD3RAH</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.html" target="_blank" class="surveyLink2">Enquête invullen</a><br>
+  <b style="color:var(--ink)">Elfsteden-log <span id="verTxt">2.4</span> – gemaakt door Richard Hendriksen, PD3RAH, met behulp van Claude (AI van Anthropic)</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.html" target="_blank" class="surveyLink2">Enquête invullen</a> · <a href="#" id="btnUpd">Controleren op nieuwe versie</a><br>
   <b>Disclaimer:</b> Dit programma wordt gratis en "as is" ter beschikking gesteld, zonder enige garantie op juistheid, volledigheid of storingsvrije werking. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het gebruik van dit programma. Controleer je log en berekende score altijd zelf voordat je deze definitief instuurt. Het officiële reglement en de beslissingen van de contestorganisatie zijn te allen tijde leidend.<br>
   © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
   <details><summary>Auteursrecht en gebruiksvoorwaarden</summary>
@@ -188,7 +189,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 <h3>Reglement en namen</h3>
 <p>Het contestreglement, de naam van de contest en de bijbehorende gegevens zijn van de organisatie van de Friese Elfsteden Contest. Elfsteden-log is een onafhankelijk hulpmiddel en geen officiële uitgave van de contestorganisatie.</p>
 <h3>Jouw gegevens</h3>
-<p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden per e-mail (via de dienst FormSubmit) naar de maker gestuurd. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
+<p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Bij het starten vraagt het programma alleen bij GitHub op wat de nieuwste versie is; daarbij worden geen gegevens van jou of je log verstuurd. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden per e-mail (via de dienst FormSubmit) naar de maker gestuurd. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
   </details>
 </footer>
 </main>
@@ -209,6 +210,9 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 (function(){
 "use strict";
 const KEY='elfsteden-log-v2';
+const VERSION='2.4.0';
+const RELEASES_API='https://api.github.com/repos/PD3RAH/elfsteden-log/releases/latest';
+const RELEASES_PAGE='https://github.com/PD3RAH/elfsteden-log/releases/latest';
 const BANDS=['80m','2m'];
 const BANDCFG={'80m':{lo:3.5,hi:3.8,def:'3.650',cab:'80M'},'2m':{lo:144,hi:146,def:'145.400',cab:'2M'}};
 const DUTCH=/^P[A-I]/;
@@ -503,7 +507,7 @@ function cabrillo(band){
   h.push('SOAPBOX: Punten '+st.pts+' (eigen regio '+st.eigen+'x1, buiten regio '+st.buiten+'x5, buitenland '+st.dx+'x2, dubbel '+st.dupe+')');
   h.push('SOAPBOX: Multipliers '+st.nm+': '+([...st.mults].join(', ')||'geen'));
   h.push('SOAPBOX: Score '+st.pts+' x '+st.nm+' = '+st.score);
-  h.push('CREATED-BY: Elfsteden-log 2.3 door PD3RAH (www.pd3rah.nl)');
+  h.push('CREATED-BY: Elfsteden-log '+VERSION+' door PD3RAH (www.pd3rah.nl)');
   const myEx=[cabTok(s.call).padEnd(13),'59 '.padEnd(4),normReg(s.reg).padEnd(3),cabTok(s.qth).padEnd(14)];
   L.forEach(q=>{
     const fr=band==='80m'?String(Math.round(parseFloat(q.freq)*1000)):'144';
@@ -578,12 +582,42 @@ $('btnPrint').addEventListener('click',()=>{
     '<tr><td><b>Totaal punten</b></td><td></td><td><b>'+st.pts+'</b></td></tr>'+
     '<tr><td>Multipliers ('+([...st.mults].join(', ')||'geen')+')</td><td></td><td><b>'+st.nm+'</b></td></tr>'+
     '<tr><td><b>Eindscore</b></td><td>'+st.pts+' × '+st.nm+'</td><td><b>'+st.score+'</b></td></tr></table>'+
-    '<p class="sig">Ik verklaar dat ik mij aan het reglement heb gehouden.<br><br>Datum: ____________________ &nbsp;&nbsp;&nbsp; Handtekening: ______________________________</p><p style="font-size:9px;color:#888;margin-top:16px">Gemaakt met Elfsteden-log 2.3 door Richard Hendriksen, PD3RAH – www.pd3rah.nl – © 2026 Richard Hendriksen, alle rechten voorbehouden – gebruik op eigen risico en verantwoordelijkheid.</p></div>';}).join('')||'<p>Geen QSO’s gelogd.</p>';
+    '<p class="sig">Ik verklaar dat ik mij aan het reglement heb gehouden.<br><br>Datum: ____________________ &nbsp;&nbsp;&nbsp; Handtekening: ______________________________</p><p style="font-size:9px;color:#888;margin-top:16px">Gemaakt met Elfsteden-log 2.4 door Richard Hendriksen, PD3RAH – www.pd3rah.nl – © 2026 Richard Hendriksen, alle rechten voorbehouden – gebruik op eigen risico en verantwoordelijkheid.</p></div>';}).join('')||'<p>Geen QSO’s gelogd.</p>';
   window.print();
 });
 
 if(APP){$('btnAuto').hidden=true;$('btnResume').hidden=true;$('btnFolder').hidden=false;$('btnFolder').onclick=()=>APP.openFolder();}
-{const q='?v=2.3.0&t='+(APP?'app':'web');const a=$('surveyLink');a.href+=q;document.querySelectorAll('.surveyLink2').forEach(x=>x.href+=q);}
+{const q='?v='+VERSION+'&t='+(APP?'app':'web');const a=$('surveyLink');a.href+=q;document.querySelectorAll('.surveyLink2').forEach(x=>x.href+=q);}
+/* ---------- controle op nieuwe versie ---------- */
+function cmpVer(a,b){const pa=String(a).replace(/^v/i,'').split('.').map(n=>parseInt(n,10)||0),pb=String(b).replace(/^v/i,'').split('.').map(n=>parseInt(n,10)||0);
+  for(let i=0;i<3;i++){if((pa[i]||0)!==(pb[i]||0))return (pa[i]||0)>(pb[i]||0)?1:-1;}return 0;}
+async function latestRelease(){
+  if(APP&&APP.latestRelease)return APP.latestRelease();
+  const ctl=new AbortController();const t=setTimeout(()=>ctl.abort(),8000);
+  try{const r=await fetch(RELEASES_API,{headers:{Accept:'application/vnd.github+json'},signal:ctl.signal,cache:'no-store'});
+    if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();return {tag:j.tag_name,url:j.html_url,name:j.name,date:j.published_at};}
+  finally{clearTimeout(t);}
+}
+async function checkUpdate(manual){
+  const b=$('updBanner');
+  try{
+    const rel=await latestRelease();
+    const latest=String(rel&&rel.tag||'').replace(/^v/i,'');
+    if(!latest)throw new Error('geen versie gevonden');
+    let dismissed='';try{dismissed=localStorage.getItem(KEY+'-skipver')||'';}catch(e){}
+    if(cmpVer(latest,VERSION)>0&&(manual||dismissed!==latest)){
+      const url=/^https:\/\/github\.com\//.test(rel.url||'')?rel.url:RELEASES_PAGE;
+      b.hidden=false;b.className='banner noprint';
+      b.innerHTML='Er is een nieuwe versie van Elfsteden-log: <b>'+esc(latest)+'</b> (jij hebt '+VERSION+'). Je log blijft bewaard bij het bijwerken. <a href="'+esc(url)+'" target="_blank"><button type="button">Downloaden</button></a> <button type="button" class="sec" id="updLater">Later</button>';
+      $('updLater').onclick=()=>{try{localStorage.setItem(KEY+'-skipver',latest);}catch(e){}b.hidden=true;};
+    }else if(manual){b.hidden=true;setStatus('Je hebt de nieuwste versie ('+VERSION+').','ok');}
+  }catch(e){if(manual)setStatus('Controleren op een nieuwe versie lukt niet. Is er internet?','dupe');}
+}
+window.checkUpdate=checkUpdate;
+$('btnUpd').addEventListener('click',e=>{e.preventDefault();checkUpdate(true);});
+$('verTxt').textContent=VERSION;
+setTimeout(()=>checkUpdate(false),3000);
+
 load().then(()=>{if(APP)$('btnResume').hidden=true;renderAll();clearForm();renderHealth();try{bc&&bc.postMessage('hello');}catch(e){}});
 })();
 </script>
