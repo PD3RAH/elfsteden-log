@@ -2,7 +2,7 @@
 
 Logprogramma voor de **42e Friese Elfsteden Contest** (zondag 22 november 2026, 11.00–14.00 uur lokale tijd).
 
-Gemaakt door Richard Hendriksen, PD3RAH – [www.pd3rah.nl](https://www.pd3rah.nl)
+Gemaakt door Richard Hendriksen, PD3RAH – [www.pd3rah.nl](https://www.pd3rah.nl), met behulp van [Claude](https://claude.ai) (AI van Anthropic)
 
 ## Downloaden
 
