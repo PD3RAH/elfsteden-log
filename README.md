@@ -6,7 +6,7 @@ Gemaakt door Richard Hendriksen, PD3RAH – [www.pd3rah.nl](https://www.pd3rah.n
 
 ## Downloaden
 
-- **Windows:** download `Elfsteden-log-Setup-2.4.0.exe` onder [Releases](../../releases).
+- **Windows:** download `Elfsteden-log-Setup-2.4.1.exe` onder [Releases](../../releases).
 - **Zonder installatie:** download `elfsteden-log.html` en `handleiding.html` en open het programma in Chrome, Edge of Firefox.
 
 Lees de [handleiding](Handleiding-Elfsteden-log.pdf) voor uitleg.

@@ -74,7 +74,7 @@ else {
       { label: 'Help', submenu: [
         { label: 'Handleiding', click: () => openHelp() },
         { label: 'Controleren op nieuwe versie', click: () => win && win.webContents.executeJavaScript('window.checkUpdate && window.checkUpdate(true)') },
-        { label: 'Enquête invullen…', click: () => shell.openExternal('https://www.pd3rah.nl/elfsteden-enquete.html?v=' + app.getVersion() + '&t=app') },
+        { label: 'Enquête invullen…', click: () => shell.openExternal('https://www.pd3rah.nl/elfsteden-enquete.php?v=' + app.getVersion() + '&t=app') },
         { label: 'Website www.pd3rah.nl', click: () => shell.openExternal('https://www.pd3rah.nl') },
         { label: 'Over Elfsteden-log', click: () => dialog.showMessageBox(win, { type: 'info', title: 'Over Elfsteden-log',
           message: 'Elfsteden-log ' + app.getVersion(),

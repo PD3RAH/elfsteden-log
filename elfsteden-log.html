@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Elfsteden-log 2.4 – logprogramma voor de 42e Friese Elfsteden Contest
+  Elfsteden-log 2.4.1 – logprogramma voor de 42e Friese Elfsteden Contest
   Gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl – met behulp van Claude (AI van Anthropic)
   © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
   Disclaimer: dit programma wordt gratis en "as is" ter beschikking gesteld, zonder
@@ -85,7 +85,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
   <div id="health">Opslag: laden…</div>
   <div class="noprint" style="display:flex;gap:8px">
     <a class="helpbtn" href="handleiding.html" target="_blank" title="Handleiding openen">Handleiding</a>
-    <a class="helpbtn" id="surveyLink" href="https://www.pd3rah.nl/elfsteden-enquete.html" target="_blank" title="Geef je mening over Elfsteden-log (opent www.pd3rah.nl)">Enquête</a>
+    <a class="helpbtn" id="surveyLink" href="https://www.pd3rah.nl/elfsteden-enquete.php" target="_blank" title="Geef je mening over Elfsteden-log (opent www.pd3rah.nl)">Enquête</a>
   </div>
   <div id="clock">--:--:--</div>
 </header>
@@ -178,7 +178,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 <section id="printarea"></section>
 
 <footer class="card noprint muted" style="line-height:1.5">
-  <b style="color:var(--ink)">Elfsteden-log <span id="verTxt">2.4</span> – gemaakt door Richard Hendriksen, PD3RAH, met behulp van Claude (AI van Anthropic)</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.html" target="_blank" class="surveyLink2">Enquête invullen</a> · <a href="#" id="btnUpd">Controleren op nieuwe versie</a><br>
+  <b style="color:var(--ink)">Elfsteden-log <span id="verTxt">2.4.1</span> – gemaakt door Richard Hendriksen, PD3RAH, met behulp van Claude (AI van Anthropic)</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.php" target="_blank" class="surveyLink2">Enquête invullen</a> · <a href="#" id="btnUpd">Controleren op nieuwe versie</a><br>
   <b>Disclaimer:</b> Dit programma wordt gratis en "as is" ter beschikking gesteld, zonder enige garantie op juistheid, volledigheid of storingsvrije werking. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het gebruik van dit programma. Controleer je log en berekende score altijd zelf voordat je deze definitief instuurt. Het officiële reglement en de beslissingen van de contestorganisatie zijn te allen tijde leidend.<br>
   © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
   <details><summary>Auteursrecht en gebruiksvoorwaarden</summary>
@@ -189,7 +189,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 <h3>Reglement en namen</h3>
 <p>Het contestreglement, de naam van de contest en de bijbehorende gegevens zijn van de organisatie van de Friese Elfsteden Contest. Elfsteden-log is een onafhankelijk hulpmiddel en geen officiële uitgave van de contestorganisatie.</p>
 <h3>Jouw gegevens</h3>
-<p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Bij het starten vraagt het programma alleen bij GitHub op wat de nieuwste versie is; daarbij worden geen gegevens van jou of je log verstuurd. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden per e-mail (via de dienst FormSubmit) naar de maker gestuurd. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
+<p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Bij het starten vraagt het programma alleen bij GitHub op wat de nieuwste versie is; daarbij worden geen gegevens van jou of je log verstuurd. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden via de website www.pd3rah.nl per e-mail naar de maker gestuurd en op die website bewaard. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
   </details>
 </footer>
 </main>
@@ -210,7 +210,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 (function(){
 "use strict";
 const KEY='elfsteden-log-v2';
-const VERSION='2.4.0';
+const VERSION='2.4.1';
 const RELEASES_API='https://api.github.com/repos/PD3RAH/elfsteden-log/releases/latest';
 const RELEASES_PAGE='https://github.com/PD3RAH/elfsteden-log/releases/latest';
 const BANDS=['80m','2m'];
@@ -582,7 +582,7 @@ $('btnPrint').addEventListener('click',()=>{
     '<tr><td><b>Totaal punten</b></td><td></td><td><b>'+st.pts+'</b></td></tr>'+
     '<tr><td>Multipliers ('+([...st.mults].join(', ')||'geen')+')</td><td></td><td><b>'+st.nm+'</b></td></tr>'+
     '<tr><td><b>Eindscore</b></td><td>'+st.pts+' × '+st.nm+'</td><td><b>'+st.score+'</b></td></tr></table>'+
-    '<p class="sig">Ik verklaar dat ik mij aan het reglement heb gehouden.<br><br>Datum: ____________________ &nbsp;&nbsp;&nbsp; Handtekening: ______________________________</p><p style="font-size:9px;color:#888;margin-top:16px">Gemaakt met Elfsteden-log 2.4 door Richard Hendriksen, PD3RAH – www.pd3rah.nl – © 2026 Richard Hendriksen, alle rechten voorbehouden – gebruik op eigen risico en verantwoordelijkheid.</p></div>';}).join('')||'<p>Geen QSO’s gelogd.</p>';
+    '<p class="sig">Ik verklaar dat ik mij aan het reglement heb gehouden.<br><br>Datum: ____________________ &nbsp;&nbsp;&nbsp; Handtekening: ______________________________</p><p style="font-size:9px;color:#888;margin-top:16px">Gemaakt met Elfsteden-log 2.4.1 door Richard Hendriksen, PD3RAH – www.pd3rah.nl – © 2026 Richard Hendriksen, alle rechten voorbehouden – gebruik op eigen risico en verantwoordelijkheid.</p></div>';}).join('')||'<p>Geen QSO’s gelogd.</p>';
   window.print();
 });
 
