@@ -1,4 +1,4 @@
-Elfsteden-log 2.4.1
+Elfsteden-log 2.5.0
 Logprogramma voor de 42e Friese Elfsteden Contest (2026)
 Gemaakt door Richard Hendriksen, PD3RAH - www.pd3rah.nl
 met behulp van Claude (AI van Anthropic)
@@ -14,7 +14,7 @@ AUTEURSRECHT
 
 SOFTWARE VAN DERDEN
 
-Dit programma bevat open-source onderdelen, waaronder Electron en Chromium. Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten staan in de installatiemap (LICENSE.electron.txt en LICENSES.chromium.html).
+Dit programma bevat open-source onderdelen, waaronder Electron, Chromium en JSZip (MIT-licentie). Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten staan in de installatiemap (LICENSE.electron.txt en LICENSES.chromium.html).
 
 REGLEMENT EN NAMEN
 

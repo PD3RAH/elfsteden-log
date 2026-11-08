@@ -27,7 +27,7 @@ kbd{background:#f0f3f6;border:1px solid #c9d0d8;border-bottom-width:2px;border-r
 <div class="page">
 
 <h1>Handleiding Elfsteden-log</h1>
-<p class="sub">Logprogramma voor de 42e Friese Elfsteden Contest (2026) · versie 2.4.1<br>Gemaakt door Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a> · met behulp van Claude (AI van Anthropic)</p>
+<p class="sub">Logprogramma voor de 42e Friese Elfsteden Contest (2026) · versie 2.5.0<br>Gemaakt door Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a> · met behulp van Claude (AI van Anthropic)</p>
 
 <div class="toc">
 <b>Inhoud</b>
@@ -99,6 +99,15 @@ kbd{background:#f0f3f6;border:1px solid #c9d0d8;border-bottom-width:2px;border-r
 <p>De <b>tijd</b> hoef je niet in te vullen. Het programma neemt de tijd van dat moment. Wil je een andere tijd? Typ die dan als vier cijfers, bijvoorbeeld <b>1135</b> voor 11.35 uur.</p>
 <p>Met <kbd>Esc</kbd> maak je het invulveld leeg.</p>
 
+<h3>De contestklok</h3>
+<p>Bovenaan het scherm staat een balk met de contesttijd:</p>
+<ul>
+<li><b>Vóór de contest:</b> hoe lang het nog duurt tot de start.</li>
+<li><b style="background:#ffd54a;padding:0 4px">Tijdens de contest</b> (geel): hoeveel tijd er nog over is, hoeveel QSO's je hebt gemaakt, hoeveel in het laatste uur en je gemiddelde per uur.</li>
+<li><b style="background:#ff7043;color:#fff;padding:0 4px">Laatste 10 minuten</b> (oranje): nog even doorwerken!</li>
+<li><b>Na de contest:</b> een herinnering om je log op tijd in te sturen.</li>
+</ul>
+
 <h3>Wat zie je tijdens het typen?</h3>
 <ul>
 <li><b style="color:#1f7a3d">Groen "Nieuw station"</b>: dit station heb je nog niet gewerkt op deze band.</li>
@@ -158,6 +167,19 @@ Leeuwarden, Sneek, IJlst, Sloten, Staveren, Hindelopen, Workum, Bolsward, Harlin
 
 <h2 id="insturen">8. Het log insturen</h2>
 <p>Het reglement vraagt: voor iedere band een apart log, met een eigen scoreberekening, je naam en je adres, ondertekend.</p>
+<h3>Het makkelijkst: het inzendpakket</h3>
+<ol>
+<li>Klik op de groene knop <b>Inzendpakket maken (zip)</b>.</li>
+<li>Je krijgt één zip-bestand met daarin per band:
+<ul>
+<li>het <b>Cabrillo-bestand</b> (.log);</li>
+<li>het <b>afdrukbare log</b> met scoreberekening en handtekeningregel (in de Windows-versie als PDF, in de browserversie als webpagina die je kunt afdrukken);</li>
+</ul>
+plus een <b>ADIF-bestand</b> en een <b>LEESMIJ</b> met je score en waar je het naartoe stuurt.</li>
+<li>In de Windows-versie staat het pakket in <b>Documenten\Elfsteden-log\inzending</b>; die map gaat vanzelf open. In de browserversie staat het in je map Downloads.</li>
+<li>Druk het log per band af, onderteken het en stuur het pakket met de ondertekende logs (of een scan of foto ervan) naar de organisatie.</li>
+</ol>
+
 <h3>Op papier of als PDF</h3>
 <ol>
 <li>Klik op <b>Afdrukken / PDF</b>.</li>
@@ -167,6 +189,9 @@ Leeuwarden, Sneek, IJlst, Sloten, Staveren, Hindelopen, Workum, Bolsward, Harlin
 </ol>
 <h3>Als Cabrillo-bestand</h3>
 <p>Kies de band en klik op <b>Cabrillo deze band</b>. Je krijgt een .log-bestand dat je per e-mail kunt meesturen. Doe dit voor elke band apart.</p>
+<h3>ADIF voor je eigen logboek</h3>
+<p>Met de knop <b>ADIF (beide banden)</b> maak je een ADIF-bestand. Dat is het standaardformaat dat je in vrijwel elk logprogramma kunt inlezen, zoals Log4OM, HRD, N1MM of Wavelog, of kunt uploaden naar het logboek van QRZ. Zo bewaar je je contest-QSO's ook in je gewone logboek. Dit bestand is niet nodig om je log in te sturen.</p>
+
 <h3>Waar naartoe?</h3>
 <p>Stuur de logs <b>vóór 6 december 2026</b> naar:</p>
 <ul>
@@ -203,13 +228,13 @@ Leeuwarden, Sneek, IJlst, Sloten, Staveren, Hindelopen, Workum, Bolsward, Harlin
 <h3>Auteursrecht</h3>
 <p>© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden. Het programma, de handleiding, de vormgeving en de broncode zijn auteursrechtelijk beschermd. Je mag het programma gratis gebruiken voor eigen, niet-commercieel gebruik. Je mag het ongewijzigd en kosteloos aan anderen doorgeven, op voorwaarde dat de naamsvermelding, deze disclaimer en de auteursrechtvermelding intact blijven. Het is niet toegestaan het programma of de handleiding te verkopen, aan te passen, geheel of gedeeltelijk over te nemen of onder een andere naam te verspreiden zonder voorafgaande schriftelijke toestemming van de maker.</p>
 <h3>Software van derden</h3>
-<p>De Windows-versie bevat open-source onderdelen, waaronder Electron en Chromium. Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten worden met het programma meegeleverd (LICENSE.electron.txt en LICENSES.chromium.html in de installatiemap).</p>
+<p>De Windows-versie bevat open-source onderdelen, waaronder Electron, Chromium en JSZip (MIT-licentie). Deze vallen onder hun eigen licenties en de rechten daarop blijven bij de betreffende rechthebbenden. De licentieteksten worden met het programma meegeleverd (LICENSE.electron.txt en LICENSES.chromium.html in de installatiemap).</p>
 <h3>Reglement en namen</h3>
 <p>Het contestreglement, de naam van de contest en de bijbehorende gegevens zijn van de organisatie van de Friese Elfsteden Contest. Elfsteden-log is een onafhankelijk hulpmiddel en geen officiële uitgave van de contestorganisatie.</p>
 <h3>Jouw gegevens</h3>
 <p>De logs en persoonsgegevens die je invoert, zijn van jou. Ze worden alleen op je eigen computer opgeslagen; het programma verstuurt zelf niets naar de maker of naar anderen. Bij het starten vraagt het programma alleen bij GitHub op wat de nieuwste versie is; daarbij worden geen gegevens van jou of je log verstuurd. Alleen als je vrijwillig de enquête op www.pd3rah.nl invult, worden die antwoorden via de website www.pd3rah.nl per e-mail naar de maker gestuurd en op die website bewaard. Ze worden uitsluitend gebruikt om het programma te verbeteren. Je bent zelf verantwoordelijk voor wat je met je logs en met de gegevens van andere stations doet, bijvoorbeeld bij het delen of publiceren ervan. De maker is daarvoor niet aansprakelijk.</p>
 
-<p class="foot">Elfsteden-log 2.4.1 · gemaakt door Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a><br>© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.<br>
+<p class="foot">Elfsteden-log 2.5.0 · gemaakt door Richard Hendriksen, PD3RAH · <a href="https://www.pd3rah.nl">www.pd3rah.nl</a><br>© 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.<br>
 Vragen over de contest zelf? Kijk op www.pi4lwd.nl of neem contact op met de organisatie.</p>
 </div>
 </body>

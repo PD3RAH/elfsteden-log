@@ -58,6 +58,28 @@ ipcMain.handle('latestRelease', async () => {
   const j = await r.json();
   return { tag: j.tag_name, url: j.html_url, name: j.name, date: j.published_at };
 });
+// Afdrukbaar log omzetten naar PDF (voor het inzendpakket)
+ipcMain.handle('toPdf', async (e, html) => {
+  const w = new BrowserWindow({ show: false, webPreferences: { javascript: false, sandbox: true } });
+  try {
+    await w.loadURL('data:text/html;charset=utf-8;base64,' + Buffer.from(String(html), 'utf8').toString('base64'));
+    const pdf = await w.webContents.printToPDF({ landscape: true, pageSize: 'A4', printBackground: true,
+      margins: { marginType: 'custom', top: 0.4, bottom: 0.4, left: 0.4, right: 0.4 } });
+    return new Uint8Array(pdf);
+  } finally { w.destroy(); }
+});
+// Inzendpakket opslaan in Documenten\Elfsteden-log\inzending en de map tonen
+ipcMain.handle('saveInzending', async (e, name, bytes) => {
+  try {
+    const safe = path.basename(String(name)).replace(/[^\w.\-]/g, '_');
+    const dir = path.join(DIR(), 'inzending');
+    fs.mkdirSync(dir, { recursive: true });
+    const f = path.join(dir, safe);
+    atomicWrite(f, Buffer.from(bytes));
+    shell.showItemInFolder(f);
+    return { ok: true, path: f };
+  } catch (err) { return { ok: false, error: String(err) }; }
+});
 ipcMain.handle('openFolder', () => { fs.mkdirSync(DIR(), { recursive: true }); return shell.openPath(DIR()); });
 
 let win = null;
