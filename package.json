@@ -1,6 +1,6 @@
 {
   "name": "elfsteden-log",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Logprogramma voor de 42e Friese Elfsteden Contest",
   "main": "main.js",
   "scripts": {

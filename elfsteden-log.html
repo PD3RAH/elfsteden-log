@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  Elfsteden-log 2.5.0 – logprogramma voor de 42e Friese Elfsteden Contest
+  Elfsteden-log 2.5.1 – logprogramma voor de 42e Friese Elfsteden Contest
   Gemaakt door Richard Hendriksen, PD3RAH – www.pd3rah.nl – met behulp van Claude (AI van Anthropic)
   © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
   Disclaimer: dit programma wordt gratis en "as is" ter beschikking gesteld, zonder
@@ -56,6 +56,26 @@ td.newmult{color:var(--ok);font-weight:700}
 dialog{border:1px solid var(--line);border-radius:8px;padding:16px;max-width:520px}
 #printarea{display:none}
 #health{font-size:12px;opacity:.95}
+input.need{border-color:var(--warn);background:#fff5f4}
+.needtxt{color:var(--warn);font-weight:700}
+.route{flex:1 1 100%;order:5;display:flex;justify-content:center;padding:2px 0 0}
+.route ol{list-style:none;margin:0;padding:0;display:flex;align-items:flex-start;position:relative}
+.route ol::before{content:"";position:absolute;left:30px;right:30px;top:41px;height:3px;border-radius:2px;background:linear-gradient(90deg,#bfe3ff,#ffffff 50%,#bfe3ff)}
+.route li{position:relative;display:flex;flex-direction:column;align-items:center;width:86px}
+.route li svg{background:radial-gradient(closest-side,rgba(255,255,255,.18),transparent);border-radius:50%}
+.route svg{width:56px;height:42px;overflow:visible;z-index:1;transition:transform .2s}
+.route .mast{stroke:#f2f6fa;stroke-width:2.4;fill:none;stroke-linecap:round}
+.route .ant{stroke:var(--c);stroke-width:2.6;fill:none;stroke-linecap:round}
+.route .feed{fill:var(--c);stroke:#f2f6fa;stroke-width:1.2}
+.route .waves{stroke:#ffd54a;stroke-width:2;fill:none;stroke-linecap:round;opacity:0}
+.route .nm{font-size:11px;margin-top:4px;color:#e8f3ff;white-space:nowrap}
+.route .nr{display:inline-block;min-width:15px;padding:0 3px;margin-right:3px;border-radius:7px;background:var(--c);color:#fff;font-weight:700;font-size:10px;line-height:14px;text-align:center;box-shadow:0 0 0 1px rgba(255,255,255,.7)}
+.route li:hover svg{transform:translateY(-2px)}
+.route li.hit svg{transform:scale(1.12)}
+.route li.hit .waves{opacity:1;animation:uitzenden 1.6s ease-in-out infinite}
+.route li.hit .nm{color:#ffd54a;font-weight:700}
+@keyframes uitzenden{0%,100%{opacity:.35}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.route li.hit .waves{animation:none}}
 .cinfo{font-weight:700;font-size:13px;padding:4px 10px;border-radius:5px;background:rgba(255,255,255,.15);font-variant-numeric:tabular-nums}
 .cinfo.live{background:#ffd54a;color:#1c2430}.cinfo.last{background:#ff7043;color:#fff}
 .helpbtn{color:#fff;text-decoration:none;font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,.65);border-radius:5px;padding:5px 14px;letter-spacing:.02em;transition:background .15s}
@@ -89,6 +109,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
     <a class="helpbtn" href="handleiding.html" target="_blank" title="Handleiding openen">Handleiding</a>
     <a class="helpbtn" id="surveyLink" href="https://www.pd3rah.nl/elfsteden-enquete.php" target="_blank" title="Geef je mening over Elfsteden-log (opent www.pd3rah.nl)">Enquête</a>
   </div>
+  <nav class="route noprint" aria-label="Elfstedenroute"><ol id="route"></ol></nav>
   <div id="cinfo" class="cinfo"></div>
   <div id="clock">--:--:--</div>
 </header>
@@ -100,8 +121,8 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
   <h2>Station &amp; deelnemer</h2>
   <div class="row">
     <label>Eigen call<input id="myCall" class="call" autocomplete="off"></label>
-    <label>Eigen regio<input id="myReg" class="sm" inputmode="numeric" placeholder="14"></label>
-    <label>Eigen QTH<input id="myQth" class="lg" placeholder="bijv. Hoorn"></label>
+    <label>Eigen regio<input id="myReg" class="sm" inputmode="numeric"></label>
+    <label>Eigen QTH<input id="myQth" class="lg"></label>
     <label>Categorie<select id="myOpCat"><option value="SINGLE-OP">Single operator</option><option value="MULTI-OP">Multi-operator</option></select></label>
     <label>Operator(s)<input id="myOps" class="lg" placeholder="calls, gescheiden door spatie"></label>
     <label>Tijdweergave<select id="tz"><option value="local">Lokale tijd</option><option value="utc">UTC</option></select></label>
@@ -183,7 +204,7 @@ body.locked #qsoForm,body.locked .tabs,body.locked #exportRow{pointer-events:non
 <section id="printarea"></section>
 
 <footer class="card noprint muted" style="line-height:1.5">
-  <b style="color:var(--ink)">Elfsteden-log <span id="verTxt">2.5.0</span> – gemaakt door Richard Hendriksen, PD3RAH, met behulp van Claude (AI van Anthropic)</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.php" target="_blank" class="surveyLink2">Enquête invullen</a> · <a href="#" id="btnUpd">Controleren op nieuwe versie</a><br>
+  <b style="color:var(--ink)">Elfsteden-log <span id="verTxt">2.5.1</span> – gemaakt door Richard Hendriksen, PD3RAH, met behulp van Claude (AI van Anthropic)</b> · <a href="https://www.pd3rah.nl" target="_blank">www.pd3rah.nl</a> · <a href="handleiding.html" target="_blank">Handleiding</a> · <a href="https://www.pd3rah.nl/elfsteden-enquete.php" target="_blank" class="surveyLink2">Enquête invullen</a> · <a href="#" id="btnUpd">Controleren op nieuwe versie</a><br>
   <b>Disclaimer:</b> Dit programma wordt gratis en "as is" ter beschikking gesteld, zonder enige garantie op juistheid, volledigheid of storingsvrije werking. Gebruik is geheel op eigen risico en verantwoordelijkheid. De maker aanvaardt geen enkele aansprakelijkheid voor schade, verlies van gegevens, fouten in logs, scores of exportbestanden, noch voor andere gevolgen voortvloeiend uit het gebruik van dit programma. Controleer je log en berekende score altijd zelf voordat je deze definitief instuurt. Het officiële reglement en de beslissingen van de contestorganisatie zijn te allen tijde leidend.<br>
   © 2026 Richard Hendriksen, PD3RAH. Alle rechten voorbehouden.
   <details><summary>Auteursrecht en gebruiksvoorwaarden</summary>
@@ -231,7 +252,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 (function(){
 "use strict";
 const KEY='elfsteden-log-v2';
-const VERSION='2.5.0';
+const VERSION='2.5.1';
 const RELEASES_API='https://api.github.com/repos/PD3RAH/elfsteden-log/releases/latest';
 const RELEASES_PAGE='https://github.com/PD3RAH/elfsteden-log/releases/latest';
 const BANDS=['80m','2m'];
@@ -240,12 +261,14 @@ const DUTCH=/^P[A-I]/;
 // Contestperiode: 22-11-2026 11:00–14:00 lokale tijd (CET = UTC+1) => 10:00–13:00 UTC
 const T0=Date.UTC(2026,10,22,10,0), T1=Date.UTC(2026,10,22,13,0);
 // Multipliers + aliassen (Nederlands/Fries)
+const YAGI='<svg viewBox="0 0 56 42" aria-hidden="true"><path class="ant" d="M7 3V31M16 6V28M25 8V26M34 9.5V24.5M42 10.5V23.5"/><path class="mast" d="M24 17V42M3 17H46"/><circle class="feed" cx="16" cy="17" r="2.4"/><g class="waves"><path d="M49 12.5q4 4.5 0 9"/><path d="M52.5 9q6 8 0 16"/></g></svg>';
+const ROUTEKLEUR=['#d32f2f','#e65100','#f9a825','#7cb342','#2e7d32','#00897b','#00acc1','#3949ab','#8e24aa','#d81b60','#6d4c41','#546e7a'];
 const MULTS=[
   ['Leeuwarden',['leeuwarden','ljouwert']],
   ['Sneek',['sneek','snits']],
   ['IJlst',['ijlst','ylst','drylts']],
   ['Sloten',['sloten','sleat']],
-  ['Staveren',['staveren','stavoren','starum']],
+  ['Stavoren',['stavoren','staveren','starum']],
   ['Hindelopen',['hindelopen','hylpen']],
   ['Workum',['workum','warkum']],
   ['Bolsward',['bolsward','boalsert']],
@@ -442,7 +465,10 @@ function renderStation(){
   $('myCall').value=s.call;$('myReg').value=s.reg;$('myQth').value=s.qth;$('myOpCat').value=s.opcat;$('myOps').value=s.ops;
   $('myName').value=s.name;$('myAddr').value=s.addr;$('myCity').value=s.city;$('myMail').value=s.mail;$('tz').value=s.tz;
   const r=normReg(s.reg);
-  $('sectInfo').textContent=r?('Sectie: '+sectionName(state.band)+' – single band, single transmitter. Contest: zondag 22 november 2026, 11.00–14.00 uur lokale tijd. Score = punten × multipliers (max. 12).'):'Vul je eigen regionummer in om de sectie en punten te bepalen.';
+  const miss=[];
+  [['myCall',s.call,'eigen call'],['myReg',r,'eigen regionummer'],['myQth',s.qth,'eigen QTH']].forEach(([id,v,lbl])=>{const empty=!String(v||'').trim();$(id).classList.toggle('need',empty);if(empty)miss.push(lbl);});
+  if(miss.length){$('sectInfo').innerHTML='<span class="needtxt">Nog invullen: '+miss.join(', ')+'.</span> Deze velden zijn nog leeg; zonder regionummer kan het programma geen punten rekenen.';}
+  else $('sectInfo').textContent='Sectie: '+sectionName(state.band)+' – single band, single transmitter. Contest: zondag 22 november 2026, 11.00–14.00 uur lokale tijd. Score = punten × multipliers (max. 12).';
   $('fRegS').value=r;
 }
 function renderTabs(){
@@ -458,6 +484,7 @@ function renderScore(){
    (s.onbekend?'<div style="color:var(--warn)">Regio ontbreekt<b>'+s.onbekend+'</b></div>':'')+
    '<div>Punten<b>'+s.pts+'</b></div><div>Multipliers<b>'+s.nm+' / 12</b></div><div style="color:var(--acc)">Score<b>'+s.pts+' × '+s.nm+' = '+s.score+'</b></div>';
   $('mults').innerHTML=MULTS.map(([n])=>'<span class="'+(s.mults.has(n)?'hit':'')+'">'+n+'</span>').join('');
+  $('route').innerHTML=MULTS.map(([n],i)=>'<li class="'+(s.mults.has(n)?'hit':'')+'" title="'+n+(s.mults.has(n)?' – gewerkt op '+state.band:' – nog niet gewerkt op '+state.band)+'" style="--c:'+ROUTEKLEUR[i]+'">'+YAGI+'<span class="nm"><span class="nr">'+(i<11?i+1:'B')+'</span>'+n+'</span></li>').join('');
 }
 function esc(t){return String(t??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function rowsHtml(band,btns){
