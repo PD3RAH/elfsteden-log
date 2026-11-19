@@ -4,6 +4,12 @@ Logprogramma voor de **42e Friese Elfsteden Contest** (zondag 22 november 2026, 
 
 Gemaakt door Richard Hendriksen, PD3RAH – [www.pd3rah.nl](https://www.pd3rah.nl), met behulp van [Claude](https://claude.ai) (AI van Anthropic)
 
+> **Gebruik je een Icom IC-7300 en/of IC-9700?** Er is ook een editie met CAT-koppeling: [Elfsteden-log CAT](https://github.com/PD3RAH/elfsteden-log-cat).
+
+![Overzicht van Elfsteden-log](docs/overzicht.png)
+
+*Voorbeeld met verzonnen gegevens.*
+
 ## Downloaden
 
 - **Windows:** download `Elfsteden-log-Setup-2.5.1.exe` onder [Releases](../../releases).
